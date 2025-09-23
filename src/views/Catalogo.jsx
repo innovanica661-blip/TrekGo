@@ -5,6 +5,9 @@ import { collection, getDocs } from "firebase/firestore";
 import TarjetaAves from "../components/catalogo/TarjetaAve";
 import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
 
+
+
+
 const Catalogo = () => {
   const [aves, setAves] = useState([]);
   const [tipos, setTipos] = useState([]);
@@ -18,40 +21,32 @@ const Catalogo = () => {
 
   const fetchData = async () => {
     try {
-      // Obtener aves
       const avesData = await getDocs(avesCollection);
       const fetchedAves = avesData.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-      console.log("Datos de aves:", fetchedAves);
 
-      // Obtener reservas y crear un mapa
       const reservasData = await getDocs(reservasCollection);
       const reservasMap = reservasData.docs.reduce((map, doc) => {
         const reservaData = doc.data();
         const key = reservaData.nombreReserva?.toLowerCase().trim() || doc.id.toLowerCase().trim();
-        console.log(`Agregando a reservasMap con clave: ${key}, datos:`, reservaData);
         map[key] = reservaData;
         return map;
       }, {});
-      console.log("Mapa de reservas:", reservasMap);
 
-      // Unir aves con datos de reservas usando 'reserva' como clave
       const avesConReservas = fetchedAves.map((ave) => {
         const reservaKey = (ave.reserva || '').toLowerCase().trim();
         const reserva = reservasMap[reservaKey] || {};
-        console.log(`Uniendo ave ${ave.nombre_comun} con reserva ${reservaKey}, reserva encontrada:`, reserva);
         return {
           ...ave,
           ubicacion: reserva.ubicacion || 'No disponible',
           guia: reserva.guia || 'No asignado',
           cupo: reserva.cupo || 0,
+          reservaData: reserva // Pasar todos los datos de la reserva
         };
       });
-      console.log("Aves con reservas:", avesConReservas);
 
       setAves(avesConReservas);
       setAvesFiltrados(avesConReservas);
 
-      // Obtener tipos
       const tiposData = await getDocs(tiposCollection);
       const fetchedTipos = tiposData.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
       setTipos(fetchedTipos);
@@ -67,7 +62,6 @@ const Catalogo = () => {
   const handleSearchChange = (e) => {
     const text = e.target.value.toLowerCase();
     setSearchText(text);
-
     const filtrados = aves.filter((ave) =>
       ave.nombre_comun.toLowerCase().includes(text) ||
       ave.tipo?.toLowerCase().includes(text) ||
@@ -113,7 +107,6 @@ const Catalogo = () => {
           />
         </Col>
       </Row>
-
       <Row>
         {avesFiltrados.length > 0 ? (
           avesFiltrados.map((ave) => (
