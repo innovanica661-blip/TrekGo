@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Button, Carousel } from "react-bootstrap";
+import { Container, Button, Carousel, Row, Col } from "react-bootstrap"; // Añadí Row y Col
 import ModalInstalacionIOS from "../components/inicio/ModalInstalacionIOS";
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom'; // Para redirección
@@ -185,7 +185,7 @@ const Inicio = () => {
               }}
             >
               <h1>LA MEJOR PLATAFORMA DE TURISMO EN CHONTALES</h1>
-              <p>Contamos con tours por los destinos para destinos más emblemáticos como las coordilleras de Amerrisque entre muchos más.</p>
+              <p>Descubre los mejores destinos para avistamiento de aves en Chontales. Ofrecemos guías expertos, reservas fáciles y un catálogo único de especies.</p>
             </div>
             <div
               style={{
@@ -203,26 +203,33 @@ const Inicio = () => {
           </Carousel.Item>
         </Carousel>
       </div>
-      <Container className="mt-5">
-        <br />
-        <h1>{t('inicio.titulo')}</h1>
-        <p>{t('inicio.descripcion')}</p>
-        <br />
-        {!esDispositivoIOS && mostrarBotonInstalacion && (
-          <div className="my-4">
-            <Button className="sombra" variant="primary" onClick={instalacion}>
-              Instalar app TrekGo <i className="bi-download"></i>
-            </Button>
-          </div>
-        )}
-        {esDispositivoIOS && (
-          <div className="text-center my-4">
-            <Button className="sombra" variant="primary" onClick={abrirModalInstrucciones}>
-              Cómo instalar TrekGo en iPhone <i className="bi-phone"></i>
-            </Button>
-          </div>
-        )}
-        <ModalInstalacionIOS mostrar={mostrarModalInstrucciones} cerrar={cerrarModalInstrucciones} />
+      {/* Nueva sección para Objetivos, Misión y Visión con íconos y texto */}
+      <Container className="mt-1 py-1">
+        <Row className="justify-content-center">
+          <Col md={4} className="mb-4 text-center">
+            <i className="bi-bullseye" style={{ fontSize: '2rem', color: '#a72828ff' }}></i>
+            <h3 className="mt-2">{t('Objetivos')}</h3>
+            <p>•	Posicionamiento de la marca: lograr que TrekGo sea reconocido como plataforma especializada en aventurismo y reservas naturales en Nicaragua y una de las más innovadoras.
+              •	Atracción de turistas: implementar estrategias digitales que destaquen la riqueza de aves y reservas del país, incrementando el interés y las visitas de viajeros.
+            •	 Promoción del turismo: difundir la conservación ambiental y el aviturismo responsable como valores diferenciales de la plataforma.
+</p>
+          </Col>
+          <Col md={4} className="mb-4 text-center">
+            <i className="bi-flag" style={{ fontSize: '2rem', color: '#3538dcff' }}></i>
+            <h3 className="mt-2">{t('Misión')}</h3>
+            <p>La principal misión de TrekGo es impulsar el turismo sostenible en nicaragua mediante una plataforma digital innovadora 
+              que conecte a turistas, guías y operadoras locales, ofreciendo experiencias únicas en el aviturismo y las visitas a reservas 
+              naturales, buscando fortalecer la conservación de la biodiversidad, generar oportunidades económicas para comunidades y posicionar a 
+              nicaragua como un destino líder en ecoturismo responsable y de calidad.</p>
+          </Col>
+          <Col md={4} className="mb-4 text-center">
+            <i className="bi-eye" style={{ fontSize: '2rem', color: '#128049ff' }}></i>
+            <h3 className="mt-2">{t('Visión')}</h3>
+            <p>Como equipo aspiramos a que TrekGo se convierta en la principal plataforma digital de aviturismo en Nicaragua. Visualizamos una aplicación 
+              que, al cumplir con todas sus funcionalidades, logre transformar la manera en que turistas nacionales e internacionales exploren la riqueza
+              natural del país, potenciando experiencias únicas, seguras y educativas.</p>
+          </Col>
+        </Row>
       </Container>
     </>
   );
