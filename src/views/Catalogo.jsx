@@ -2,35 +2,59 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Form, Col } from "react-bootstrap";
 import { db } from "../database/firebaseconfig";
 import { collection, getDocs } from "firebase/firestore";
-import TarjetaProducto from "../components/catalogo/TarjetaProducto";
+import TarjetaAves from "../components/catalogo/TarjetaAve";
 import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
 
 const Catalogo = () => {
-  const [productos, setProductos] = useState([]);
-  const [categorias, setCategorias] = useState([]);
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("Todas");
-  const [productosFiltrados, setProductosFiltrados] = useState([]);
+  const [aves, setAves] = useState([]);
+  const [tipos, setTipos] = useState([]);
+  const [tipoSeleccionada, setTipoSeleccionada] = useState("Todas");
+  const [avesFiltrados, setAvesFiltrados] = useState([]);
   const [searchText, setSearchText] = useState("");
 
-  const productosCollection = collection(db, "productos");
-  const categoriasCollection = collection(db, "categorias");
+  const avesCollection = collection(db, "aves");
+  const tiposCollection = collection(db, "tipos");
+  const reservasCollection = collection(db, "reservas");
 
   const fetchData = async () => {
     try {
-      const productosData = await getDocs(productosCollection);
-      const fetchedProductos = productosData.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setProductos(fetchedProductos);
-      setProductosFiltrados(fetchedProductos); // Inicializar con todos los productos
+      // Obtener aves
+      const avesData = await getDocs(avesCollection);
+      const fetchedAves = avesData.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      console.log("Datos de aves:", fetchedAves);
 
-      const categoriasData = await getDocs(categoriasCollection);
-      const fetchedCategorias = categoriasData.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setCategorias(fetchedCategorias);
+      // Obtener reservas y crear un mapa
+      const reservasData = await getDocs(reservasCollection);
+      const reservasMap = reservasData.docs.reduce((map, doc) => {
+        const reservaData = doc.data();
+        const key = reservaData.nombreReserva?.toLowerCase().trim() || doc.id.toLowerCase().trim();
+        console.log(`Agregando a reservasMap con clave: ${key}, datos:`, reservaData);
+        map[key] = reservaData;
+        return map;
+      }, {});
+      console.log("Mapa de reservas:", reservasMap);
+
+      // Unir aves con datos de reservas usando 'reserva' como clave
+      const avesConReservas = fetchedAves.map((ave) => {
+        const reservaKey = (ave.reserva || '').toLowerCase().trim();
+        const reserva = reservasMap[reservaKey] || {};
+        console.log(`Uniendo ave ${ave.nombre_comun} con reserva ${reservaKey}, reserva encontrada:`, reserva);
+        return {
+          ...ave,
+          ubicacion: reserva.ubicacion || 'No disponible',
+          guia: reserva.guia || 'No asignado',
+          cupo: reserva.cupo || 0,
+        };
+      });
+      console.log("Aves con reservas:", avesConReservas);
+
+      setAves(avesConReservas);
+      setAvesFiltrados(avesConReservas);
+
+      // Obtener tipos
+      const tiposData = await getDocs(tiposCollection);
+      const fetchedTipos = tiposData.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      setTipos(fetchedTipos);
     } catch (error) {
       console.error("Error al obtener datos:", error);
     }
@@ -44,38 +68,39 @@ const Catalogo = () => {
     const text = e.target.value.toLowerCase();
     setSearchText(text);
 
-    const filtrados = productos.filter((producto) =>
-      producto.nombre.toLowerCase().includes(text) ||
-      producto.categoria.toLowerCase().includes(text) ||
-      String(producto.precio).toLowerCase().includes(text) // Convertir precio a string
+    const filtrados = aves.filter((ave) =>
+      ave.nombre_comun.toLowerCase().includes(text) ||
+      ave.tipo?.toLowerCase().includes(text) ||
+      ave.ubicacion?.toLowerCase().includes(text) ||
+      ave.guia?.toLowerCase().includes(text) ||
+      String(ave.cupo).includes(text)
     );
-    setProductosFiltrados(filtrados);
+    setAvesFiltrados(filtrados);
   };
 
-  // Filtrar productos por categoría usando useEffect para mantener la lógica reactiva
   useEffect(() => {
-    const filtradosPorCategoria =
-      categoriaSeleccionada === "Todas"
-        ? productos
-        : productos.filter((producto) => producto.categoria === categoriaSeleccionada);
-    setProductosFiltrados(filtradosPorCategoria);
-  }, [categoriaSeleccionada, productos]);
+    const filtradosPorTipo =
+      tipoSeleccionada === "Todas"
+        ? aves
+        : aves.filter((ave) => ave.tipo === tipoSeleccionada);
+    setAvesFiltrados(filtradosPorTipo);
+  }, [tipoSeleccionada, aves]);
 
   return (
     <Container className="mt-5">
       <br />
-      <h4>Catálogo de Productos</h4>
+      <h4>Catálogo de Aves</h4>
       <Row>
         <Col lg={3} md={4} sm={12}>
           <Form.Group className="mb-3">
             <Form.Select
-              value={categoriaSeleccionada}
-              onChange={(e) => setCategoriaSeleccionada(e.target.value)}
+              value={tipoSeleccionada}
+              onChange={(e) => setTipoSeleccionada(e.target.value)}
             >
               <option value="Todas">Todas</option>
-              {categorias.map((categoria) => (
-                <option key={categoria.id} value={categoria.nombre}>
-                  {categoria.nombre}
+              {tipos.map((tipo) => (
+                <option key={tipo.id} value={tipo.nombre}>
+                  {tipo.nombre}
                 </option>
               ))}
             </Form.Select>
@@ -90,12 +115,12 @@ const Catalogo = () => {
       </Row>
 
       <Row>
-        {productosFiltrados.length > 0 ? (
-          productosFiltrados.map((producto) => (
-            <TarjetaProducto key={producto.id} producto={producto} />
+        {avesFiltrados.length > 0 ? (
+          avesFiltrados.map((ave) => (
+            <TarjetaAves key={ave.id} ave={ave} />
           ))
         ) : (
-          <p>No hay productos en esta categoría.</p>
+          <p>No hay Aves en este tipo.</p>
         )}
       </Row>
     </Container>

@@ -89,6 +89,22 @@ const Encabezado = () => {
               </Nav.Link>
 
               <Nav.Link
+                onClick={() => handleNavigate("/guias")}
+                className={isCollapsed ? "color-texto-marca" : "text-white"}
+              >
+                {isCollapsed ? <i className="bi-bookmark-check-fill me-2"></i> : null}
+                <strong>{t('menu.guia')}</strong>
+              </Nav.Link>
+
+               <Nav.Link
+                onClick={() => handleNavigate("/reserva")}
+                className={isCollapsed ? "color-texto-marca" : "text-white"}
+              >
+                {isCollapsed ? <i className="bi-bookmark-check-fill me-2"></i> : null}
+                <strong>{t('menu.reserva')}</strong>
+              </Nav.Link>
+
+              <Nav.Link
                 onClick={() => handleNavigate("/aves")}
                 className={isCollapsed ? "color-texto-marca" : "text-white"}
               >

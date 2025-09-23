@@ -8,7 +8,8 @@ const ModalEdicionAve = ({
   handleEditInputChange,
   handleEditImageChange,
   handleEditAve,
-  tipos
+  tipos,
+  reservas
 }) => {
   if (!aveEditado) return null;
 
@@ -63,6 +64,23 @@ const ModalEdicionAve = ({
               ))}
             </Form.Select>
           </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Reserva Natural</Form.Label>
+            <Form.Select
+              name="reserva"
+              value={aveEditado.reserva}
+              onChange={handleEditInputChange}
+            >
+              <option value="">Seleccione una Reserva</option>
+              {reservas.map((res) => (
+                <option key={res.id} value={res.nombreReserva}>
+                  {res.nombreReserva}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+
           <Form.Group className="mb-3">
             <Form.Label>Imagen Actual</Form.Label>
             {aveEditado.imagen && (

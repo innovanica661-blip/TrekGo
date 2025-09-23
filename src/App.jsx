@@ -6,6 +6,8 @@ import Encabezado from "./components/Encabezado";
 import Inicio from "./views/Inicio";
 import Aves from "./views/Aves";
 import Tipos from "./views/Tipos";
+import Guias from "./views/Guias";
+import Reservas from "./views/Reserva";
 import Catalogo from "./views/Catalogo";
 
 import './App.css'
@@ -20,7 +22,9 @@ function App() {
               <Route path="/" element={<Login />} />
               <Route path="/inicio" element={<ProtectedRoute element={<Inicio />} />} />
               <Route path="/aves" element={<ProtectedRoute element={<Aves />} />}/>
+              <Route path="/guias" element={<ProtectedRoute element={<Guias />} />}/>
               <Route path="/tipos" element={<ProtectedRoute element={<Tipos />} />}/>
+              <Route path="/reserva" element={<ProtectedRoute element={<Reservas />} />}/>
               <Route path="/catalogo" element={<ProtectedRoute element={<Catalogo />} />}/>
             </Routes>
           </main>

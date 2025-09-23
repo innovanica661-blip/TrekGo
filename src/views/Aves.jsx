@@ -22,6 +22,7 @@ import { saveAs } from "file-saver";
 const Aves = () => {
   const [aves, setAves] = useState([]);
   const [tipos, setTipos] = useState([]); // Inicializado como arreglo vacío
+  const [reservas, setReserva] = useState([]); // Inicializado como arreglo vacío
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -30,6 +31,7 @@ const Aves = () => {
     nombre_cientifico: "",
     descripcion: "",
     tipo: "",
+    reserva: "",
     imagen: "",
   });
   const [aveEditado, setAveEditado] = useState(null);
@@ -42,6 +44,7 @@ const Aves = () => {
 
   const avesCollection = collection(db, "aves");
   const tiposCollection = collection(db, "tipos");
+  const reservasCollection = collection(db, "reservas");
 
   useEffect(() => {
     const handleOnline = () => setIsOffline(false);
@@ -72,9 +75,19 @@ const Aves = () => {
       setTipos(fetchedTipos); // Asegúrate de que los datos se carguen aquí
     }, (error) => console.error("Error al escuchar tipos:", error));
 
+
+    const unsubscribeReserva = onSnapshot(reservasCollection, (snapshot) => {
+      const fetchedReserva = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setReserva(fetchedReserva); // Asegúrate de que los datos se carguen aquí
+    }, (error) => console.error("Error al escuchar reserva:", error));
+
     return () => {
       unsubscribeAves();
       unsubscribeTipos();
+      unsubscribeReserva();
     };
   };
 
@@ -112,7 +125,7 @@ const Aves = () => {
   };
 
   const handleAddAve = async () => {
-    if (!nuevaAve.nombre_comun || !nuevaAve.nombre_cientifico || !nuevaAve.descripcion || !nuevaAve.tipo || !nuevaAve.imagen) {
+    if (!nuevaAve.nombre_comun || !nuevaAve.nombre_cientifico || !nuevaAve.descripcion || !nuevaAve.tipo || !nuevaAve.reserva || !nuevaAve.imagen) {
       alert("Por favor, completa todos los campos, incluyendo la imagen.");
       return;
     }
@@ -129,9 +142,10 @@ const Aves = () => {
         nombre_cientifico: nuevaAve.nombre_cientifico,
         descripcion: nuevaAve.descripcion,
         tipo: nuevaAve.tipo,
+        reserva: nuevaAve.reserva,
         imagen: nuevaAve.imagen,
       });
-      setNuevaAve({ nombre_comun: "", nombre_cientifico: "", descripcion: "", tipo: "", imagen: "" });
+      setNuevaAve({ nombre_comun: "", nombre_cientifico: "", descripcion: "", tipo: "", reserva: "", imagen: "" });
     } catch (error) {
       console.error("Error al agregar el ave:", error);
       setAves((prev) => prev.filter((ave) => ave.id !== tempId));
@@ -141,7 +155,7 @@ const Aves = () => {
   };
 
   const handleEditAve = async () => {
-    if (!aveEditado.nombre_comun || !aveEditado.nombre_cientifico || !aveEditado.descripcion || !aveEditado.tipo || !aveEditado.imagen) {
+    if (!aveEditado.nombre_comun || !aveEditado.nombre_cientifico || !aveEditado.descripcion || !aveEditado.tipo || !aveEditado.reserva || !aveEditado.imagen) {
       alert("Por favor, completa todos los campos, incluyendo la imagen.");
       return;
     }
@@ -157,6 +171,7 @@ const Aves = () => {
         nombre_cientifico: aveEditado.nombre_cientifico,
         descripcion: aveEditado.descripcion,
         tipo: aveEditado.tipo,
+        reserva: aveEditado.reserva,
         imagen: aveEditado.imagen,
       });
     } catch (error) {
@@ -221,8 +236,8 @@ const Aves = () => {
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(28);
     doc.text("Lista de Aves", doc.internal.pageSize.getWidth() / 2, 18, { align: "center" });
-    const columnas = ["#", "Nombre Común", "Nombre Científico", "Descripción", "Tipo"];
-    const filas = avesFiltrados.map((ave, index) => [index + 1, ave.nombre_comun, ave.nombre_cientifico, ave.descripcion, ave.tipo]);
+    const columnas = ["#", "Nombre Común", "Nombre Científico", "Descripción", "Tipo", "Reserva"];
+    const filas = avesFiltrados.map((ave, index) => [index + 1, ave.nombre_comun, ave.nombre_cientifico, ave.descripcion, ave.tipo, ave.reserva]);
     autoTable(doc, { head: [columnas], body: filas, startY: 40 });
     doc.save("aves.pdf");
   };
@@ -234,6 +249,7 @@ const Aves = () => {
       Nombre_Cientifico: ave.nombre_cientifico,
       Descripcion: ave.descripcion,
       Tipo: ave.tipo,
+      Reserva: ave.reserva,
     }));
     const hoja = XLSX.utils.json_to_sheet(datos);
     const libro = XLSX.utils.book_new();
@@ -254,6 +270,7 @@ const Aves = () => {
     pdf.text(`Nombre Científico: ${ave.nombre_cientifico}`, 105, 40, { align: "center" });
     pdf.text(`Descripción: ${ave.descripcion}`, 105, 50, { align: "center" });
     pdf.text(`Tipo: ${ave.tipo}`, 105, 60, { align: "center" });
+    pdf.text(`Reserva: ${ave.reserva}`, 105, 60, { align: "center" });
     pdf.save(`${ave.nombre_comun}.pdf`);
   };
 
@@ -299,6 +316,7 @@ const Aves = () => {
         handleImageChange={handleImageChange}
         handleAddAve={handleAddAve}
         tipos={tipos} // Prop correcta
+        reservas={reservas} // Prop correcta
       />
       <ModalEdicionAve
         showEditModal={showEditModal}
@@ -308,6 +326,7 @@ const Aves = () => {
         handleEditImageChange={handleEditImageChange}
         handleEditAve={handleEditAve}
         tipos={tipos}
+        reservas={reservas}
       />
       <ModalEliminacionAves
         showDeleteModal={showDeleteModal}

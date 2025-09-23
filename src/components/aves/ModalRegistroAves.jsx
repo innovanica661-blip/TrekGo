@@ -9,6 +9,7 @@ const ModalRegistroAves = ({
   handleImageChange,
   handleAddAve,
   tipos, // Cambia "tipo" a "tipos" para que coincida con la prop pasada
+  reservas
 }) => {
   return (
     <Modal show={showModal} onHide={() => setShowModal(false)}>
@@ -58,6 +59,22 @@ const ModalRegistroAves = ({
               {tipos && tipos.map((tip) => ( // Verificación condicional
                 <option key={tip.id} value={tip.nombre}>
                   {tip.nombre}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Reserva Natural</Form.Label>
+            <Form.Select
+              name="reserva"
+              value={nuevaAve.reserva}
+              onChange={handleInputChange}
+            >
+              <option value="">Seleccione una Reserva</option>
+              {reservas && reservas.map((res) => ( // Verificación condicional
+                <option key={res.id} value={res.nombreReserva}>
+                  {res.nombreReserva}
                 </option>
               ))}
             </Form.Select>

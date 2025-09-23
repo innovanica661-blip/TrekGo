@@ -25,6 +25,7 @@ const TablaAves = ({
             <th>Nombre Científico</th>
             <th>Descripción</th>
             <th>Tipo</th>
+            <th>Reserva Natural</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -40,6 +41,7 @@ const TablaAves = ({
               <td>{ave.nombre_cientifico}</td>
               <td>{ave.descripcion}</td>
               <td>{ave.tipo}</td>
+              <td>{ave.reserva}</td>
               <td>
                 <Button
                   variant="outline-secondary"

@@ -37,6 +37,8 @@ i18n
             inicio: "Inicio",
             tipo: "Tipo",
             aves: "Aves",
+            guia: "Guias",
+            reserva: "Reserva Natural",
             catalogo: "Catálogo",
             cerrarSesion: "Cerrar Sesión",
             iniciarSesion: "Iniciar Sesión",
