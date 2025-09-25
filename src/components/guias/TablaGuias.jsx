@@ -24,6 +24,7 @@ const TablaGuias = ({
             <th>Cédula</th>
             <th>Certificación</th>
             <th>Teléfono</th>
+            <th>Imagenes</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -38,6 +39,15 @@ const TablaGuias = ({
                 <td>{guia.cedula}</td>
                 <td>{guia.certificacion}</td>
                 <td>{guia.telefono}</td>
+                <td>
+                  {guia.imagenes && (
+                    <img
+                      src={guia.imagenes}
+                      alt={`${guia.nombre} ${guia.apellido}`}
+                      style={{ maxWidth: "100px", maxHeight: "100px" }}
+                    />
+                  )}
+                </td>
                 <td>
                   <Button
                     variant="outline-warning"
