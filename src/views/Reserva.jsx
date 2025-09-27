@@ -23,7 +23,7 @@ import { saveAs } from "file-saver";
 const Reservas = () => {
   // Estados para manejo de datos
   const [reservas, setReservas] = useState([]);
-  const [guias, setGuias] = useState([]); // Corrección de setguias a setGuias
+  const [guias, setGuias] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -33,7 +33,10 @@ const Reservas = () => {
     actividad: "",
     fecha: "",
     precioCosto: "",
-    guia: "", // Añadido para seleccionar guía
+    guia: "",
+    distancia: "",
+    dificultad: "", // Corrección de typo: 'dificultad' en lugar de 'dificulta'
+    cupo: "",
   });
   const [reservaEditada, setReservaEditada] = useState(null);
   const [reservaAEliminar, setReservaAEliminar] = useState(null);
@@ -112,6 +115,9 @@ const Reservas = () => {
         reserva.actividad.toLowerCase().includes(text) ||
         reserva.fecha.toLowerCase().includes(text) ||
         reserva.precioCosto.toString().toLowerCase().includes(text) ||
+        reserva.distancia.toLowerCase().includes(text) ||
+        reserva.dificultad.toLowerCase().includes(text) || // Corrección de typo
+        reserva.cupo.toString().toLowerCase().includes(text) ||
         (reserva.guia && reserva.guia.toLowerCase().includes(text))
     );
     setReservasFiltradas(filtradas);
@@ -143,7 +149,10 @@ const Reservas = () => {
       !nuevaReserva.actividad ||
       !nuevaReserva.fecha ||
       !nuevaReserva.precioCosto ||
-      !nuevaReserva.guia
+      !nuevaReserva.guia ||
+      !nuevaReserva.distancia ||
+      !nuevaReserva.dificultad ||
+      !nuevaReserva.cupo
     ) {
       alert("Por favor, completa todos los campos antes de guardar.");
       return;
@@ -165,6 +174,9 @@ const Reservas = () => {
         fecha: "",
         precioCosto: "",
         guia: "",
+        distancia: "",
+        dificultad: "",
+        cupo: "",
       });
 
       await addDoc(reservasCollection, nuevaReserva);
@@ -189,41 +201,63 @@ const Reservas = () => {
 
   // Función para actualizar una reserva existente (UPDATE)
   const handleEditReserva = async () => {
-    if (
-      !reservaEditada?.nombreReserva ||
-      !reservaEditada?.ubicacion ||
-      !reservaEditada?.actividad ||
-      !reservaEditada?.fecha ||
-      !reservaEditada?.precioCosto ||
-      !reservaEditada?.guia
-    ) {
-      alert("Por favor, completa todos los campos antes de actualizar.");
+    console.log("Estado de reservaEditada antes de validación:", reservaEditada); // Depuración
+
+    // Verificar si todos los campos están presentes y no son vacíos
+    const requiredFields = {
+      nombreReserva: reservaEditada?.nombreReserva,
+      ubicacion: reservaEditada?.ubicacion,
+      actividad: reservaEditada?.actividad,
+      fecha: reservaEditada?.fecha,
+      precioCosto: reservaEditada?.precioCosto,
+      guia: reservaEditada?.guia,
+      distancia: reservaEditada?.distancia,
+      dificultad: reservaEditada?.dificultad,
+      cupo: reservaEditada?.cupo,
+    };
+
+    const emptyFields = Object.entries(requiredFields)
+      .filter(([key, value]) => !value || value === "")
+      .map(([key]) => key);
+
+    if (emptyFields.length > 0) {
+      alert(`Por favor, completa los siguientes campos: ${emptyFields.join(", ")}`);
       return;
     }
 
     setShowEditModal(false);
 
     const reservaRef = doc(db, "reservas", reservaEditada.id);
+    console.log("Referencia a documento:", reservaRef.path); // Depuración
 
     try {
-      await updateDoc(reservaRef, {
+      console.log("Actualizando reserva con ID:", reservaEditada.id);
+      console.log("Datos a actualizar:", reservaEditada);
+
+      // Convertir precioCosto y cupo a números si son cadenas
+      const updatedData = {
         nombreReserva: reservaEditada.nombreReserva,
         ubicacion: reservaEditada.ubicacion,
         actividad: reservaEditada.actividad,
         fecha: reservaEditada.fecha,
-        precioCosto: reservaEditada.precioCosto,
+        precioCosto: Number(reservaEditada.precioCosto), // Forzar a número
         guia: reservaEditada.guia,
-      });
+        distancia: reservaEditada.distancia,
+        dificultad: reservaEditada.dificultad,
+        cupo: Number(reservaEditada.cupo), // Forzar a número
+      };
+
+      await updateDoc(reservaRef, updatedData);
 
       if (isOffline) {
         setReservas((prev) =>
           prev.map((reserva) =>
-            reserva.id === reservaEditada.id ? { ...reservaEditada } : reserva
+            reserva.id === reservaEditada.id ? { ...reservaEditada, ...updatedData } : reserva
           )
         );
         setReservasFiltradas((prev) =>
           prev.map((reserva) =>
-            reserva.id === reservaEditada.id ? { ...reservaEditada } : reserva
+            reserva.id === reservaEditada.id ? { ...reservaEditada, ...updatedData } : reserva
           )
         );
         console.log("Reserva actualizada localmente (sin conexión).");
@@ -398,7 +432,7 @@ const Reservas = () => {
         nuevaReserva={nuevaReserva}
         handleInputChange={handleInputChange}
         handleAddReserva={handleAddReserva}
-        guias={guias} // Corrección de 'guia' a 'guias'
+        guias={guias}
       />
       <ModalEdicionReserva
         showEditModal={showEditModal}
@@ -406,7 +440,7 @@ const Reservas = () => {
         reservaEditada={reservaEditada}
         handleEditInputChange={handleEditInputChange}
         handleEditReserva={handleEditReserva}
-        guias={guias} // Añadido para consistencia
+        guias={guias}
       />
       <ModalEliminacionReserva
         showDeleteModal={showDeleteModal}

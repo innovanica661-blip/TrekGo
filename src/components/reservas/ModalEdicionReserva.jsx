@@ -7,6 +7,7 @@ const ModalEdicionReserva = ({
   reservaEditada,
   handleEditInputChange,
   handleEditReserva,
+  guias,
 }) => {
   return (
     <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
@@ -77,13 +78,18 @@ const ModalEdicionReserva = ({
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Guía</Form.Label>
-            <Form.Control
-              type="text"
+            <Form.Select
               name="guia"
-              value={reservaEditada?.guia || ""}
+              value={reservaEditada?.guia || ""} // Añadido ?. para evitar errores si es null
               onChange={handleEditInputChange}
-              placeholder="Ingresa el nombre del guía"
-            />
+            >
+              <option value="">Seleccione un guía</option>
+              {guias.map((guia) => (
+                <option key={guia.id} value={guia.nombre}>
+                  {guia.nombre} {/* Corregido de tip.nombre a guia.nombre */}
+                </option>
+              ))}
+            </Form.Select>
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Distancia</Form.Label>

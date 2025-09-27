@@ -1,18 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/ferreteria_selva_logo.png";
+import logo from "../Imagenes/logo.png";
 import { useAuth } from "../database/authcontext";
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import {Container, Nav, Navbar, Offcanvas, NavDropdown  } from "react-bootstrap";
+import { Container, Nav, Navbar, Offcanvas, NavDropdown } from "react-bootstrap";
 import "../App.css";
 import { useTranslation } from 'react-i18next';
 
 const Encabezado = () => {
-
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout, role } = useAuth();
   const navigate = useNavigate();
-
   const { t, i18n } = useTranslation();
 
   const cambiarIdioma = (lang) => {
@@ -21,17 +19,10 @@ const Encabezado = () => {
 
   const handleLogout = async () => {
     try {
-      // Cerrar el offcanvas antes de proceder
       setIsCollapsed(false);
-
-      // Eliminar variables almacenadas en localStorage
       localStorage.removeItem("adminEmail");
       localStorage.removeItem("adminPassword");
-
-      // Cerrar sesión
       await logout();
-
-      // Redirigir al inicio
       navigate("/");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
@@ -40,7 +31,6 @@ const Encabezado = () => {
 
   const handleToggle = () => setIsCollapsed(!isCollapsed);
 
-  // Funciones de navegación
   const handleNavigate = (path) => {
     navigate(path);
     setIsCollapsed(false);
@@ -49,7 +39,7 @@ const Encabezado = () => {
   return (
     <Navbar expand="md" fixed="top" className="color-navbar">
       <Container>
-        <Navbar.Brand onClick={() => handleNavigate("/inicio")} className="text-white" style={{ cursor: "pointer" }}>
+        <Navbar.Brand onClick={() => handleNavigate("/inicio")} className="text-black" style={{ cursor: "pointer" }}>
           <img alt="" src={logo} width="30" height="30" className="d-inline-block align-top" />{" "}
           <strong>TrekGo</strong>
         </Navbar.Brand>
@@ -62,64 +52,44 @@ const Encabezado = () => {
           onHide={() => setIsCollapsed(false)}
         >
           <Offcanvas.Header closeButton>
-            <Offcanvas.Title
-              id="offcanvasNavbarLabel-expand-sm"
-              className={isCollapsed ? "color-texto-marca" : "text-white"}
-            >
+            <Offcanvas.Title id="offcanvasNavbarLabel-expand-sm" className={isCollapsed ? "color-texto-marca" : "text-black"}>
               Menú
             </Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
             <Nav className="justify-content-end flex-grow-1 pe-3">
-
-              <Nav.Link
-                onClick={() => handleNavigate("/inicio")}
-                className={isCollapsed ? "color-texto-marca" : "text-white"}
-              >
+              <Nav.Link onClick={() => handleNavigate("/inicio")} className={isCollapsed ? "color-texto-marca" : "text-black"}>
                 {isCollapsed ? <i className="bi-house-door-fill me-2"></i> : null}
                 <strong>{t('menu.inicio')}</strong>
               </Nav.Link>
-
-              <Nav.Link
-                onClick={() => handleNavigate("/tipos")}
-                className={isCollapsed ? "color-texto-marca" : "text-white"}
-              >
-                {isCollapsed ? <i className="bi-bookmark-check-fill me-2"></i> : null}
-                <strong>{t('menu.tipo')}</strong>
-              </Nav.Link>
-
-              <Nav.Link
-                onClick={() => handleNavigate("/guias")}
-                className={isCollapsed ? "color-texto-marca" : "text-white"}
-              >
+              {role === 'admin' && (
+                <>
+                  <Nav.Link onClick={() => handleNavigate("/tipos")} className={isCollapsed ? "color-texto-marca" : "text-black"}>
+                    {isCollapsed ? <i className="bi-bookmark-check-fill me-2"></i> : null}
+                    <strong>{t('menu.tipo')}</strong>
+                  </Nav.Link>
+                  <Nav.Link onClick={() => handleNavigate("/usuarios")} className={isCollapsed ? "color-texto-marca" : "text-black"}>
+                    {isCollapsed ? <i className="bi-bookmark-check-fill me-2"></i> : null}
+                    <strong>{t('Usuarios')}</strong>
+                  </Nav.Link>
+                </>
+              )}
+              <Nav.Link onClick={() => handleNavigate("/guias")} className={isCollapsed ? "color-texto-marca" : "text-black"}>
                 {isCollapsed ? <i className="bi-bookmark-check-fill me-2"></i> : null}
                 <strong>{t('menu.guia')}</strong>
               </Nav.Link>
-
-               <Nav.Link
-                onClick={() => handleNavigate("/reserva")}
-                className={isCollapsed ? "color-texto-marca" : "text-white"}
-              >
+              <Nav.Link onClick={() => handleNavigate("/reserva")} className={isCollapsed ? "color-texto-marca" : "text-black"}>
                 {isCollapsed ? <i className="bi-bookmark-check-fill me-2"></i> : null}
                 <strong>{t('menu.reserva')}</strong>
               </Nav.Link>
-
-              <Nav.Link
-                onClick={() => handleNavigate("/aves")}
-                className={isCollapsed ? "color-texto-marca" : "text-white"}
-              >
+              <Nav.Link onClick={() => handleNavigate("/aves")} className={isCollapsed ? "color-texto-marca" : "text-black"}>
                 {isCollapsed ? <i className="bi-bag-heart-fill me-2"></i> : null}
                 <strong>{t('menu.aves')}</strong>
               </Nav.Link>
-
-              <Nav.Link
-                onClick={() => handleNavigate("/catalogo")}
-                className={isCollapsed ? "color-texto-marca" : "text-white"}
-              >
+              <Nav.Link onClick={() => handleNavigate("/calendario")} className={isCollapsed ? "color-texto-marca" : "text-black"}>
                 {isCollapsed ? <i className="bi-file-earmark-richtext-fill me-2"></i> : null}
-                <strong>{t('menu.catalogo')}</strong>
+                <strong>{t('menu.calendario')}</strong>
               </Nav.Link>
-
               <NavDropdown 
                 title={
                   <span>
@@ -127,41 +97,26 @@ const Encabezado = () => {
                     {isCollapsed && <span>{t('menu.idioma')}</span>}
                   </span>
                 }
-                  id="basic-nav-dropdown"  
-                  className={isCollapsed ? "color-texto-marca" : "texto-blanco"}
-                >
-                <NavDropdown.Item
-                  onClick={() => cambiarIdioma('es')}
-                  className="text-black"
-                >
+                id="basic-nav-dropdown"  
+                className={isCollapsed ? "color-texto-marca" : "texto-blanco"}
+              >
+                <NavDropdown.Item onClick={() => cambiarIdioma('es')} className="text-black">
                   <strong>{t('menu.español')}</strong>
                 </NavDropdown.Item>
-
-                <NavDropdown.Item
-                  className="text-black"
-                  onClick={() => cambiarIdioma('en')}
-                >
+                <NavDropdown.Item onClick={() => cambiarIdioma('en')} className="text-black">
                   <strong>{t('menu.ingles')}</strong>
                 </NavDropdown.Item>
-
               </NavDropdown>
-
               {isLoggedIn ? (
-                <>
-                  <Nav.Link onClick={handleLogout} className={isCollapsed ? "text-black" : "text-white"}>
+                <Nav.Link onClick={handleLogout} className={isCollapsed ? "text-black" : "text-black"}>
                   {isCollapsed ? <i className="bi-box-arrow-in-right me-2"></i> : null}
-                    {t('menu.cerrarSesion')}
-                  </Nav.Link>
-                </>
+                  {t('menu.cerrarSesion')}
+                </Nav.Link>
               ) : location.pathname === "/" && (
-                <Nav.Link
-                  onClick={() => handleNavigate("/")}
-                  className={isCollapsed ? "text-black" : "text-white"}
-                >
+                <Nav.Link onClick={() => handleNavigate("/")} className={isCollapsed ? "text-black" : "text-white"}>
                   {t('menu.iniciarSesion')}
                 </Nav.Link>
               )}
-
             </Nav>
           </Offcanvas.Body>
         </Navbar.Offcanvas>

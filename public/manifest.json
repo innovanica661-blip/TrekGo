@@ -1,7 +1,7 @@
 {
-  "name": "Ferretería Selva",
-  "short_name": "Ferretería Selva",
-  "description": "Todo lo necesario para construcción y el hogar.",
+  "name": "logo",
+  "short_name": "logo",
+  "description": "Aviturismo eficiente.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

@@ -1,7 +1,6 @@
 import React from "react";
 import { Table, Button } from "react-bootstrap";
-import Paginacion from "../ordenamiento/Paginacion"; 
-
+import Paginacion from "../ordenamiento/Paginacion";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 const TablaGuias = ({
@@ -14,6 +13,10 @@ const TablaGuias = ({
   setCurrentPage,
 }) => {
   console.log("Guias recibidas en TablaGuias:", guias); // Depuración
+
+  // Ordenar guias por id en orden ascendente
+  const sortedGuias = [...guias].sort((a, b) => a.id - b.id);
+
   return (
     <>
       <Table striped bordered hover responsive>
@@ -28,10 +31,12 @@ const TablaGuias = ({
           </tr>
         </thead>
         <tbody>
-          {guias.length === 0 ? (
-            <tr><td colSpan="6">No hay guías para mostrar.</td></tr> // Mensaje si está vacío
+          {sortedGuias.length === 0 ? (
+            <tr>
+              <td colSpan="6">No hay guías para mostrar.</td>
+            </tr> // Mensaje si está vacío
           ) : (
-            guias.map((guia) => (
+            sortedGuias.map((guia) => (
               <tr key={guia.id}>
                 <td>{guia.nombre}</td>
                 <td>{guia.apellido}</td>

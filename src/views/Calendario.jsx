@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Form, Col } from "react-bootstrap";
+import { Container, Row, Form, Col, Spinner } from "react-bootstrap"; // Añadido Spinner
 import { db } from "../database/firebaseconfig";
 import { collection, getDocs } from "firebase/firestore";
-import TarjetaAves from "../components/catalogo/TarjetaAve";
+import TarjetaAves from "../components/calendario/TarjetaAve";
 import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
-
-
-
 
 const Catalogo = () => {
   const [aves, setAves] = useState([]);
@@ -14,6 +11,7 @@ const Catalogo = () => {
   const [tipoSeleccionada, setTipoSeleccionada] = useState("Todas");
   const [avesFiltrados, setAvesFiltrados] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const [loading, setLoading] = useState(true); // Estado de carga
 
   const avesCollection = collection(db, "aves");
   const tiposCollection = collection(db, "tipos");
@@ -21,6 +19,7 @@ const Catalogo = () => {
 
   const fetchData = async () => {
     try {
+      setLoading(true); // Activar carga
       const avesData = await getDocs(avesCollection);
       const fetchedAves = avesData.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
 
@@ -40,7 +39,7 @@ const Catalogo = () => {
           ubicacion: reserva.ubicacion || 'No disponible',
           guia: reserva.guia || 'No asignado',
           cupo: reserva.cupo || 0,
-          reservaData: reserva // Pasar todos los datos de la reserva
+          reservaData: reserva
         };
       });
 
@@ -52,6 +51,8 @@ const Catalogo = () => {
       setTipos(fetchedTipos);
     } catch (error) {
       console.error("Error al obtener datos:", error);
+    } finally {
+      setLoading(false); // Desactivar carga cuando termine
     }
   };
 
@@ -83,7 +84,6 @@ const Catalogo = () => {
   return (
     <Container className="mt-5">
       <br />
-      <h4>Catálogo de Aves</h4>
       <Row>
         <Col lg={3} md={4} sm={12}>
           <Form.Group className="mb-3">
@@ -108,7 +108,13 @@ const Catalogo = () => {
         </Col>
       </Row>
       <Row>
-        {avesFiltrados.length > 0 ? (
+        {loading ? (
+          <div className="text-center">
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Cargando...</span>
+            </Spinner>
+          </div>
+        ) : avesFiltrados.length > 0 ? (
           avesFiltrados.map((ave) => (
             <TarjetaAves key={ave.id} ave={ave} />
           ))
