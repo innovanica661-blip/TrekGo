@@ -44,7 +44,7 @@ const TablaAves = ({
               <td>{ave.reserva}</td>
               <td>
                 <Button
-                  variant="outline-secondary"
+                  variant="outlin2-secondary"
                   size="sm"
                   className="me-2"
                   onClick={() => generarPDFDetalleAve(ave)}
