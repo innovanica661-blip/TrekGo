@@ -1,13 +1,16 @@
 import React from "react";
-import { Modal, Form, Button } from "react-bootstrap";
+import { Modal, Form, Button, Image } from "react-bootstrap";
 
 const ModalEdicionGuia = ({
   showEditModal,
   setShowEditModal,
   guiaEditada,
   handleEditInputChange,
+  handleEditImageChange,
   handleEditGuia,
 }) => {
+  if (!guiaEditada) return null;
+
   return (
     <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
       <Modal.Header closeButton>
@@ -22,7 +25,6 @@ const ModalEdicionGuia = ({
               name="nombre"
               value={guiaEditada?.nombre || ""}
               onChange={handleEditInputChange}
-              placeholder="Ingresa el nombre"
             />
           </Form.Group>
           <Form.Group className="mb-3">
@@ -32,7 +34,6 @@ const ModalEdicionGuia = ({
               name="apellido"
               value={guiaEditada?.apellido || ""}
               onChange={handleEditInputChange}
-              placeholder="Ingresa el apellido"
             />
           </Form.Group>
           <Form.Group className="mb-3">
@@ -42,7 +43,6 @@ const ModalEdicionGuia = ({
               name="cedula"
               value={guiaEditada?.cedula || ""}
               onChange={handleEditInputChange}
-              placeholder="Ingresa la cédula"
             />
           </Form.Group>
           <Form.Group className="mb-3">
@@ -52,7 +52,6 @@ const ModalEdicionGuia = ({
               name="certificacion"
               value={guiaEditada?.certificacion || ""}
               onChange={handleEditInputChange}
-              placeholder="Ingresa la certificación"
             />
           </Form.Group>
           <Form.Group className="mb-3">
@@ -62,7 +61,21 @@ const ModalEdicionGuia = ({
               name="telefono"
               value={guiaEditada?.telefono || ""}
               onChange={handleEditInputChange}
-              placeholder="Ingresa el teléfono"
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Imagen Actual</Form.Label>
+            {guiaEditada.imagenes && (
+              <Image
+                src={guiaEditada.imagenes}
+                width="100"
+                className="mb-2 d-block"
+              />
+            )}
+            <Form.Control
+              type="file"
+              accept="image/*"
+              onChange={handleEditImageChange}
             />
           </Form.Group>
         </Form>
@@ -72,7 +85,7 @@ const ModalEdicionGuia = ({
           Cancelar
         </Button>
         <Button variant="primary" onClick={handleEditGuia}>
-          Guardar
+          Guardar Cambios
         </Button>
       </Modal.Footer>
     </Modal>

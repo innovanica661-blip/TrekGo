@@ -120,6 +120,15 @@ const Encabezado = () => {
                 <strong>{t('menu.catalogo')}</strong>
               </Nav.Link>
 
+
+              <Nav.Link
+                onClick={() => handleNavigate("/catalogoguias")}
+                className={isCollapsed ? "color-texto-marca" : "text-white"}
+              >
+                {isCollapsed ? <i className="bi-file-earmark-richtext-fill me-2"></i> : null}
+                <strong>{t('menu.catalogoguias')}</strong>
+              </Nav.Link>
+
               <NavDropdown 
                 title={
                   <span>

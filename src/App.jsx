@@ -9,6 +9,7 @@ import Tipos from "./views/Tipos";
 import Guias from "./views/Guias";
 import Reservas from "./views/Reserva";
 import Catalogo from "./views/Catalogo";
+import CatalogoGuias from "./views/CatalogoGuias";
 
 import './App.css'
 
@@ -26,6 +27,7 @@ function App() {
               <Route path="/tipos" element={<ProtectedRoute element={<Tipos />} />}/>
               <Route path="/reserva" element={<ProtectedRoute element={<Reservas />} />}/>
               <Route path="/catalogo" element={<ProtectedRoute element={<Catalogo />} />}/>
+              <Route path="/catalogoguias" element={<ProtectedRoute element={<CatalogoGuias />} />}/>
             </Routes>
           </main>
       </Router>

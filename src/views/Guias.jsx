@@ -19,7 +19,7 @@ import ModalRegistroReserva from "../components/reservas/ModalRegistroReserva";
 
 const Guias = () => {
   const [guias, setGuias] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); // Estado de carga
+  const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -29,6 +29,7 @@ const Guias = () => {
     cedula: "",
     certificacion: "",
     telefono: "",
+    imagenes: "", // Añadido para consistencia
   });
   const [guiaEditada, setGuiaEditada] = useState(null);
   const [guiaAEliminar, setGuiaAEliminar] = useState(null);
@@ -82,10 +83,10 @@ const Guias = () => {
       }
       setGuias(fetchedGuias);
       setGuiasFiltradas(fetchedGuias);
-      setIsLoading(false); // Datos cargados, termina la carga
+      setIsLoading(false);
     }, (error) => {
       console.error("Error al escuchar guías:", error);
-      setIsLoading(false); // Manejo de error, termina la carga
+      setIsLoading(false);
     });
     return stopListening;
   };
@@ -134,6 +135,24 @@ const Guias = () => {
     }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setNuevaGuia((prev) => ({ ...prev, imagenes: reader.result }));
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleEditImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setGuiaEditada((prev) => ({ ...prev, imagenes: reader.result }));
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleAddGuia = async () => {
     if (
       !nuevaGuia.nombre ||
@@ -161,6 +180,7 @@ const Guias = () => {
         cedula: "",
         certificacion: "",
         telefono: "",
+        imagenes: "",
       });
 
       await addDoc(guiasCollection, nuevaGuia);
@@ -206,6 +226,7 @@ const Guias = () => {
         cedula: guiaEditada.cedula,
         certificacion: guiaEditada.certificacion,
         telefono: guiaEditada.telefono,
+        imagenes: guiaEditada.imagenes, // Añadido para actualizar la imagen
       });
 
       if (isOffline) {
@@ -227,12 +248,12 @@ const Guias = () => {
       console.error("Error al actualizar la guía:", error);
       setGuias((prev) =>
         prev.map((guia) =>
-          guia.id === guiaEditada.id ? { ...guiaEditada } : guia
+          guia.id === guiaEditada.id ? { ...guia } : guia
         )
       );
       setGuiasFiltradas((prev) =>
         prev.map((guia) =>
-          guia.id === guiaEditada.id ? { ...guiaEditada } : guia
+          guia.id === guiaEditada.id ? { ...guia } : guia
         )
       );
       alert("Ocurrió un error al actualizar la guía: " + error.message);
@@ -322,7 +343,6 @@ const Guias = () => {
           </Button>
         </Col>
       
-      
         <Col lg={5} md={8} sm={8} xs={7}>
           <CuadroBusquedas
             searchText={searchText}
@@ -354,6 +374,7 @@ const Guias = () => {
         nuevaGuia={nuevaGuia}
         handleInputChange={handleInputChange}
         handleAddGuia={handleAddGuia}
+        handleImageChange={handleImageChange}
         guias={guias}
       />
       <ModalEdicionGuia
@@ -361,6 +382,7 @@ const Guias = () => {
         setShowEditModal={setShowEditModal}
         guiaEditada={guiaEditada}
         handleEditInputChange={handleEditInputChange}
+        handleEditImageChange={handleEditImageChange}
         handleEditGuia={handleEditGuia}
         guias={guias}
       />
