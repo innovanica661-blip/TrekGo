@@ -7,6 +7,7 @@ const ModalRegistroReserva = ({
   nuevaReserva,
   handleInputChange,
   handleAddReserva,
+  handleImageChange,
   guias,
 }) => {
   return (
@@ -26,6 +27,18 @@ const ModalRegistroReserva = ({
               placeholder="Ingresa el nombre de la reserva"
             />
           </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Descripción</Form.Label>
+            <Form.Control
+              type="text"
+              name="descripcion"
+              value={nuevaReserva.descripcion}
+              onChange={handleInputChange}
+              placeholder="Ingresa la descripción"
+            />
+          </Form.Group>
+
           <Form.Group className="mb-3">
             <Form.Label>Ubicación</Form.Label>
             <Form.Control
@@ -111,6 +124,14 @@ const ModalRegistroReserva = ({
               placeholder="Ingresa la dificultad"
             />
           </Form.Group>
+          <Form.Group className="mb-3">
+              <Form.Label>Imagen</Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+            </Form.Group>
         </Form>
       </Modal.Body>
       <Modal.Footer>

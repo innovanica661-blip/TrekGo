@@ -8,6 +8,7 @@ const ModalEdicionReserva = ({
   handleEditInputChange,
   handleEditReserva,
   guias,
+  handleEditImageChange
 }) => {
   return (
     <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
@@ -26,7 +27,19 @@ const ModalEdicionReserva = ({
               placeholder="Ingresa el nombre de la reserva"
             />
           </Form.Group>
+
           <Form.Group className="mb-3">
+            <Form.Label>Descripción</Form.Label>
+            <Form.Control
+              type="text"
+              name="descripcion"
+              value={reservaEditada?.descripcion || ""}
+              onChange={handleEditInputChange}
+              placeholder="Ingresa la descripción"
+            />
+          </Form.Group>
+          <Form.Group 
+          className="mb-3">
             <Form.Label>Ubicación</Form.Label>
             <Form.Control
               type="text"
@@ -109,6 +122,14 @@ const ModalEdicionReserva = ({
               value={reservaEditada?.dificultad || ""}
               onChange={handleEditInputChange}
               placeholder="Ingresa la dificultad"
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Imagen</Form.Label>
+            <Form.Control
+              type="file"
+              accept="image/*"
+              onChange={handleEditImageChange}
             />
           </Form.Group>
         </Form>

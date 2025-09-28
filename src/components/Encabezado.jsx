@@ -90,6 +90,11 @@ const Encabezado = () => {
                 {isCollapsed ? <i className="bi-file-earmark-richtext-fill me-2"></i> : null}
                 <strong>{t('menu.calendario')}</strong>
               </Nav.Link>
+
+              <Nav.Link onClick={() => handleNavigate("/catalogoReserva")} className={isCollapsed ? "color-texto-marca" : "text-black"}>
+                {isCollapsed ? <i className="bi-file-earmark-richtext-fill me-2"></i> : null}
+                <strong>{t('menu.catalogoReserva')}</strong>
+              </Nav.Link>
               <NavDropdown 
                 title={
                   <span>

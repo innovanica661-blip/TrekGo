@@ -8,6 +8,23 @@ const ModalRegistroGuia = ({
   handleInputChange,
   handleAddGuia,
 }) => {
+  // Handle image file selection and convert to base64
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        handleInputChange({
+          target: {
+            name: "imagenes",
+            value: reader.result, // Store base64 string
+          },
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <Modal show={showModal} onHide={() => setShowModal(false)}>
       <Modal.Header closeButton>
@@ -64,6 +81,22 @@ const ModalRegistroGuia = ({
               onChange={handleInputChange}
               placeholder="Ingresa el teléfono"
             />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Imagen</Form.Label>
+            <Form.Control
+              type="file"
+              name="imagenes"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+            {nuevaGuia.imagenes && (
+              <img
+                src={nuevaGuia.imagenes}
+                alt="Vista previa"
+                style={{ maxWidth: "100%", maxHeight: "200px", marginTop: "10px" }}
+              />
+            )}
           </Form.Group>
         </Form>
       </Modal.Body>

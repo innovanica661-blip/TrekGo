@@ -1,11 +1,11 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
 
-const ModalEliminacionReserva = ({
+const ModalEliminacionGuia = ({
   showDeleteModal,
   setShowDeleteModal,
-  handleDeleteReserva,
-  reservaAEliminar,
+  handleDeleteGuia,
+  guiaAEliminar,
 }) => {
   return (
     <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
@@ -13,14 +13,19 @@ const ModalEliminacionReserva = ({
         <Modal.Title>Confirmar Eliminación</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        ¿Estás seguro de que deseas eliminar la reserva{" "}
-        {reservaAEliminar ? `con ID ${reservaAEliminar.id}` : "esta reserva"}?
+        ¿Estás seguro de que deseas eliminar la guía{" "}
+        {guiaAEliminar ? `con ID ${guiaAEliminar.id}` : "esta guía"}?
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
           Cancelar
         </Button>
-        <Button variant="danger" onClick={handleDeleteReserva}>
+        <Button variant="danger" onClick={() => {
+          if (handleDeleteGuia && guiaAEliminar) {
+            handleDeleteGuia(guiaAEliminar.id); // Llama a la función con el ID
+          }
+          setShowDeleteModal(false);
+        }}>
           Eliminar
         </Button>
       </Modal.Footer>
@@ -28,4 +33,4 @@ const ModalEliminacionReserva = ({
   );
 };
 
-export default ModalEliminacionReserva;
+export default ModalEliminacionGuia;

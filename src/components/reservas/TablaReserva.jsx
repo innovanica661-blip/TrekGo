@@ -1,7 +1,6 @@
 import React from "react";
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, Image } from "react-bootstrap";
 import Paginacion from "../ordenamiento/Paginacion"; 
-
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 const TablaReservas = ({
@@ -20,6 +19,7 @@ const TablaReservas = ({
         <thead>
           <tr>
             <th>Nombre de la Reserva</th>
+            <th>Descripción</th>
             <th>Ubicación</th>
             <th>Actividad</th>
             <th>Fecha</th>
@@ -28,16 +28,18 @@ const TablaReservas = ({
             <th>Guía</th>
             <th>Distancia</th>
             <th>Dificultad</th>
+            <th>Imagenes</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {reservas.length === 0 ? (
-            <tr><td colSpan="10">No hay reservas para mostrar.</td></tr> // Mensaje si está vacío
+            <tr><td colSpan="12">No hay reservas para mostrar.</td></tr> // Ajustado colSpan a 12
           ) : (
             reservas.map((reserva) => (
               <tr key={reserva.id}>
                 <td>{reserva.nombreReserva}</td>
+                <td>{reserva.descripcion}</td>
                 <td>{reserva.ubicacion}</td>
                 <td>{reserva.actividad}</td>
                 <td>{reserva.fecha}</td>
@@ -46,6 +48,11 @@ const TablaReservas = ({
                 <td>{reserva.guia}</td>
                 <td>{reserva.distancia}</td>
                 <td>{reserva.dificultad}</td>
+                <td>
+                {reserva.imagen && (
+                  <Image src={reserva.imagen} width="50" height="50" />
+                )}
+              </td>
                 <td>
                   <Button
                     variant="outline-warning"

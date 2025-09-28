@@ -29,14 +29,16 @@ const Reservas = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [nuevaReserva, setNuevaReserva] = useState({
     nombreReserva: "",
+    descripcion: "",
     ubicacion: "",
     actividad: "",
     fecha: "",
     precioCosto: "",
     guia: "",
     distancia: "",
-    dificultad: "", // Corrección de typo: 'dificultad' en lugar de 'dificulta'
+    dificultad: "",
     cupo: "",
+    imagen: "",
   });
   const [reservaEditada, setReservaEditada] = useState(null);
   const [reservaAEliminar, setReservaAEliminar] = useState(null);
@@ -52,14 +54,11 @@ const Reservas = () => {
 
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
-  const [showChatModal, setShowChatModal] = useState(false);
-
   useEffect(() => {
     const handleOnline = () => setIsOffline(false);
     const handleOffline = () => setIsOffline(true);
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
-    setIsOffline(!navigator.onLine);
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
@@ -73,12 +72,6 @@ const Reservas = () => {
         ...doc.data(),
         id: doc.id,
       }));
-      console.log("Datos cargados de Firestore (reservas):", fetchedReservas);
-      if (fetchedReservas.length > 0) {
-        console.log("Primer registro:", fetchedReservas[0]);
-      } else {
-        console.log("No se encontraron registros en Firestore.");
-      }
       setReservas(fetchedReservas);
       setReservasFiltradas(fetchedReservas);
     }, (error) => console.error("Error al escuchar reservas:", error));
@@ -88,7 +81,6 @@ const Reservas = () => {
         ...doc.data(),
         id: doc.id,
       }));
-      console.log("Datos cargados de Firestore (guías):", fetchedGuias);
       setGuias(fetchedGuias);
     }, (error) => console.error("Error al escuchar guías:", error));
 
@@ -111,12 +103,13 @@ const Reservas = () => {
     const filtradas = reservas.filter(
       (reserva) =>
         reserva.nombreReserva.toLowerCase().includes(text) ||
+        reserva.descripcion.toLowerCase().includes(text) ||
         reserva.ubicacion.toLowerCase().includes(text) ||
         reserva.actividad.toLowerCase().includes(text) ||
         reserva.fecha.toLowerCase().includes(text) ||
         reserva.precioCosto.toString().toLowerCase().includes(text) ||
         reserva.distancia.toLowerCase().includes(text) ||
-        reserva.dificultad.toLowerCase().includes(text) || // Corrección de typo
+        reserva.dificultad.toLowerCase().includes(text) ||
         reserva.cupo.toString().toLowerCase().includes(text) ||
         (reserva.guia && reserva.guia.toLowerCase().includes(text))
     );
@@ -141,10 +134,29 @@ const Reservas = () => {
     }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setNuevaReserva((prev) => ({ ...prev, imagen: reader.result }));
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleEditImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setReservaEditada((prev) => ({ ...prev, imagen: reader.result }));
+      reader.readAsDataURL(file);
+    }
+  };
+
   // Función para agregar una nueva reserva (CREATE)
   const handleAddReserva = async () => {
     if (
       !nuevaReserva.nombreReserva ||
+      !nuevaReserva.descripcion ||
       !nuevaReserva.ubicacion ||
       !nuevaReserva.actividad ||
       !nuevaReserva.fecha ||
@@ -152,9 +164,10 @@ const Reservas = () => {
       !nuevaReserva.guia ||
       !nuevaReserva.distancia ||
       !nuevaReserva.dificultad ||
-      !nuevaReserva.cupo
+      !nuevaReserva.cupo ||
+      !nuevaReserva.imagen
     ) {
-      alert("Por favor, completa todos los campos antes de guardar.");
+      alert("Por favor, completa todos los campos, incluyendo la descripción y la imagen.");
       return;
     }
 
@@ -167,8 +180,23 @@ const Reservas = () => {
       setReservas((prev) => [...prev, reservaConId]);
       setReservasFiltradas((prev) => [...prev, reservaConId]);
 
+      await addDoc(reservasCollection, {
+        nombreReserva: nuevaReserva.nombreReserva,
+        descripcion: nuevaReserva.descripcion,
+        ubicacion: nuevaReserva.ubicacion,
+        actividad: nuevaReserva.actividad,
+        fecha: nuevaReserva.fecha,
+        precioCosto: nuevaReserva.precioCosto,
+        guia: nuevaReserva.guia,
+        distancia: nuevaReserva.distancia,
+        dificultad: nuevaReserva.dificultad,
+        cupo: nuevaReserva.cupo,
+        imagen: nuevaReserva.imagen,
+      });
+
       setNuevaReserva({
         nombreReserva: "",
+        descripcion: "",
         ubicacion: "",
         actividad: "",
         fecha: "",
@@ -177,106 +205,60 @@ const Reservas = () => {
         distancia: "",
         dificultad: "",
         cupo: "",
+        imagen: "",
       });
-
-      await addDoc(reservasCollection, nuevaReserva);
-
-      if (isOffline) {
-        console.log("Reserva agregada localmente (sin conexión).");
-      } else {
-        console.log("Reserva agregada exitosamente en la nube.");
-      }
     } catch (error) {
       console.error("Error al agregar la reserva:", error);
-
-      if (isOffline) {
-        console.log("Offline: Reserva almacenada localmente.");
-      } else {
-        setReservas((prev) => prev.filter((reserva) => reserva.id !== tempId));
-        setReservasFiltradas((prev) => prev.filter((reserva) => reserva.id !== tempId));
-        alert("Error al agregar la reserva: " + error.message);
-      }
+      setReservas((prev) => prev.filter((reserva) => reserva.id !== tempId));
+      setReservasFiltradas((prev) => prev.filter((reserva) => reserva.id !== tempId));
+      alert("Error al agregar la reserva: " + error.message);
     }
   };
 
   // Función para actualizar una reserva existente (UPDATE)
   const handleEditReserva = async () => {
-    console.log("Estado de reservaEditada antes de validación:", reservaEditada); // Depuración
-
-    // Verificar si todos los campos están presentes y no son vacíos
-    const requiredFields = {
-      nombreReserva: reservaEditada?.nombreReserva,
-      ubicacion: reservaEditada?.ubicacion,
-      actividad: reservaEditada?.actividad,
-      fecha: reservaEditada?.fecha,
-      precioCosto: reservaEditada?.precioCosto,
-      guia: reservaEditada?.guia,
-      distancia: reservaEditada?.distancia,
-      dificultad: reservaEditada?.dificultad,
-      cupo: reservaEditada?.cupo,
-    };
-
-    const emptyFields = Object.entries(requiredFields)
-      .filter(([key, value]) => !value || value === "")
-      .map(([key]) => key);
-
-    if (emptyFields.length > 0) {
-      alert(`Por favor, completa los siguientes campos: ${emptyFields.join(", ")}`);
+    if (
+      !reservaEditada.nombreReserva ||
+      !reservaEditada.descripcion ||
+      !reservaEditada.ubicacion ||
+      !reservaEditada.actividad ||
+      !reservaEditada.fecha ||
+      !reservaEditada.precioCosto ||
+      !reservaEditada.guia ||
+      !reservaEditada.distancia ||
+      !reservaEditada.dificultad ||
+      !reservaEditada.cupo ||
+      !reservaEditada.imagen
+    ) {
+      alert("Por favor, completa todos los campos, incluyendo la descripción y la imagen.");
       return;
     }
 
     setShowEditModal(false);
 
     const reservaRef = doc(db, "reservas", reservaEditada.id);
-    console.log("Referencia a documento:", reservaRef.path); // Depuración
 
     try {
-      console.log("Actualizando reserva con ID:", reservaEditada.id);
-      console.log("Datos a actualizar:", reservaEditada);
-
-      // Convertir precioCosto y cupo a números si son cadenas
-      const updatedData = {
+      setReservas((prev) => prev.map((reserva) => (reserva.id === reservaEditada.id ? { ...reservaEditada } : reserva)));
+      setReservasFiltradas((prev) => prev.map((reserva) => (reserva.id === reservaEditada.id ? { ...reservaEditada } : reserva)));
+      await updateDoc(reservaRef, {
         nombreReserva: reservaEditada.nombreReserva,
+        descripcion: reservaEditada.descripcion,
         ubicacion: reservaEditada.ubicacion,
         actividad: reservaEditada.actividad,
         fecha: reservaEditada.fecha,
-        precioCosto: Number(reservaEditada.precioCosto), // Forzar a número
+        precioCosto: reservaEditada.precioCosto,
         guia: reservaEditada.guia,
         distancia: reservaEditada.distancia,
         dificultad: reservaEditada.dificultad,
-        cupo: Number(reservaEditada.cupo), // Forzar a número
-      };
-
-      await updateDoc(reservaRef, updatedData);
-
-      if (isOffline) {
-        setReservas((prev) =>
-          prev.map((reserva) =>
-            reserva.id === reservaEditada.id ? { ...reservaEditada, ...updatedData } : reserva
-          )
-        );
-        setReservasFiltradas((prev) =>
-          prev.map((reserva) =>
-            reserva.id === reservaEditada.id ? { ...reservaEditada, ...updatedData } : reserva
-          )
-        );
-        console.log("Reserva actualizada localmente (sin conexión).");
-      } else {
-        console.log("Reserva actualizada exitosamente en la nube.");
-      }
+        cupo: reservaEditada.cupo,
+        imagen: reservaEditada.imagen,
+      });
     } catch (error) {
       console.error("Error al actualizar la reserva:", error);
-      setReservas((prev) =>
-        prev.map((reserva) =>
-          reserva.id === reservaEditada.id ? { ...reservaEditada } : reserva
-        )
-      );
-      setReservasFiltradas((prev) =>
-        prev.map((reserva) =>
-          reserva.id === reservaEditada.id ? { ...reservaEditada } : reserva
-        )
-      );
-      alert("Ocurrió un error al actualizar la reserva: " + error.message);
+      setReservas((prev) => prev.map((reserva) => (reserva.id === reservaEditada.id ? { ...reserva } : reserva)));
+      setReservasFiltradas((prev) => prev.map((reserva) => (reserva.id === reservaEditada.id ? { ...reserva } : reserva)));
+      alert("Error al actualizar la reserva: " + error.message);
     }
   };
 
@@ -293,22 +275,11 @@ const Reservas = () => {
 
       const reservaRef = doc(db, "reservas", reservaAEliminar.id);
       await deleteDoc(reservaRef);
-
-      if (isOffline) {
-        console.log("Reserva eliminada localmente (sin conexión).");
-      } else {
-        console.log("Reserva eliminada exitosamente en la nube.");
-      }
     } catch (error) {
       console.error("Error al eliminar la reserva:", error);
-
-      if (isOffline) {
-        console.log("Offline: Eliminación almacenada localmente.");
-      } else {
-        setReservas((prev) => [...prev, reservaAEliminar]);
-        setReservasFiltradas((prev) => [...prev, reservaAEliminar]);
-        alert("Error al eliminar la reserva: " + error.message);
-      }
+      setReservas((prev) => [...prev, reservaAEliminar]);
+      setReservasFiltradas((prev) => [...prev, reservaAEliminar]);
+      alert("Error al eliminar la reserva: " + error.message);
     }
   };
 
@@ -326,7 +297,11 @@ const Reservas = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-  console.log("PaginatedReservas:", paginatedReservas); // Depuración
+
+  const handleCopy = (reserva) => {
+    const rowData = `Nombre Reserva: ${reserva.nombreReserva}\nDescripción: ${reserva.descripcion}\nUbicación: ${reserva.ubicacion}\nActividad: ${reserva.actividad}\nFecha: ${reserva.fecha}\nPrecio Costo: ${reserva.precioCosto}\nGuía: ${reserva.guia}\nDistancia: ${reserva.distancia}\nDificultad: ${reserva.dificultad}\nCupo: ${reserva.cupo}`;
+    navigator.clipboard.writeText(rowData).then(() => console.log("Datos copiados")).catch((err) => console.error(err));
+  };
 
   // Funciones para generar reportes
   const generarPDFReservas = () => {
@@ -336,15 +311,19 @@ const Reservas = () => {
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(28);
     doc.text("Lista de Reservas", doc.internal.pageSize.getWidth() / 2, 18, { align: "center" });
-    const columnas = ["#", "Nombre Reserva", "Ubicación", "Actividad", "Fecha", "Precio Costo", "Guía"];
+    const columnas = ["#", "Nombre Reserva", "Descripción", "Ubicación", "Actividad", "Fecha", "Precio Costo", "Guía", "Distancia", "Dificultad", "Cupo"];
     const filas = reservasFiltradas.map((reserva, index) => [
       index + 1,
       reserva.nombreReserva,
+      reserva.descripcion,
       reserva.ubicacion,
       reserva.actividad,
       reserva.fecha,
       reserva.precioCosto,
       reserva.guia || "Sin guía",
+      reserva.distancia,
+      reserva.dificultad,
+      reserva.cupo,
     ]);
     autoTable(doc, { head: [columnas], body: filas, startY: 40 });
     doc.save("reservas.pdf");
@@ -354,11 +333,15 @@ const Reservas = () => {
     const datos = reservasFiltradas.map((reserva, index) => ({
       "#": index + 1,
       Nombre_Reserva: reserva.nombreReserva,
+      Descripcion: reserva.descripcion,
       Ubicacion: reserva.ubicacion,
       Actividad: reserva.actividad,
       Fecha: reserva.fecha,
       Precio_Costo: reserva.precioCosto,
       Guia: reserva.guia || "Sin guía",
+      Distancia: reserva.distancia,
+      Dificultad: reserva.dificultad,
+      Cupo: reserva.cupo,
     }));
     const hoja = XLSX.utils.json_to_sheet(datos);
     const libro = XLSX.utils.book_new();
@@ -367,9 +350,29 @@ const Reservas = () => {
     saveAs(new Blob([excelBuffer], { type: "application/octet-stream" }), "reservas.xlsx");
   };
 
+  const generarPDFDetalleReservas = (reserva) => {
+    const pdf = new jsPDF();
+    pdf.setFillColor(28, 41, 51);
+    pdf.rect(0, 0, 220, 30, "F");
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(22);
+    pdf.text(reserva.nombreReserva, pdf.internal.pageSize.getWidth() / 2, 18, { align: "center" });
+    pdf.setTextColor(0, 0, 0);
+    pdf.setFontSize(14);
+    pdf.text(`Descripción: ${reserva.descripcion}`, 105, 40, { align: "center" });
+    pdf.text(`Ubicación: ${reserva.ubicacion}`, 105, 50, { align: "center" });
+    pdf.text(`Actividad: ${reserva.actividad}`, 105, 60, { align: "center" });
+    pdf.text(`Fecha: ${reserva.fecha}`, 105, 70, { align: "center" });
+    pdf.text(`Precio Costo: ${reserva.precioCosto}`, 105, 80, { align: "center" });
+    pdf.text(`Guía: ${reserva.guia}`, 105, 90, { align: "center" });
+    pdf.text(`Distancia: ${reserva.distancia}`, 105, 100, { align: "center" });
+    pdf.text(`Dificultad: ${reserva.dificultad}`, 105, 110, { align: "center" });
+    pdf.text(`Cupo: ${reserva.cupo}`, 105, 120, { align: "center" });
+    pdf.save(`${reserva.nombreReserva}.pdf`);
+  };
+
   return (
     <Container className="mt-5">
-      <br />
       <h4>Gestión de Reservas</h4>
       <Row>
         <Col lg={3} md={4} sm={4} xs={5}>
@@ -409,28 +412,24 @@ const Reservas = () => {
         </Col>
       </Row>
 
-      {reservasFiltradas.length === 0 ? (
-        <p>No hay reservas disponibles. Agrega una nueva reserva para comenzar.</p>
-      ) : (
-        <>
-          <p>Depuración: Renderizando {reservasFiltradas.length} reservas.</p>
-          <TablaReservas
-            reservas={paginatedReservas}
-            totalItems={reservasFiltradas.length}
-            itemsPerPage={itemsPerPage}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            openEditModal={openEditModal}
-            openDeleteModal={openDeleteModal}
-          />
-        </>
-      )}
+      <TablaReservas
+        reservas={paginatedReservas}
+        totalItems={reservasFiltradas.length}
+        itemsPerPage={itemsPerPage}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        openEditModal={openEditModal}
+        openDeleteModal={openDeleteModal}
+        handleCopy={handleCopy}
+        generarPDFDetalleReserva={generarPDFDetalleReservas}
+      />
 
       <ModalRegistroReserva
         showModal={showModal}
         setShowModal={setShowModal}
         nuevaReserva={nuevaReserva}
         handleInputChange={handleInputChange}
+        handleImageChange={handleImageChange}
         handleAddReserva={handleAddReserva}
         guias={guias}
       />
@@ -439,6 +438,7 @@ const Reservas = () => {
         setShowEditModal={setShowEditModal}
         reservaEditada={reservaEditada}
         handleEditInputChange={handleEditInputChange}
+        handleEditImageChange={handleEditImageChange}
         handleEditReserva={handleEditReserva}
         guias={guias}
       />
@@ -446,7 +446,6 @@ const Reservas = () => {
         showDeleteModal={showDeleteModal}
         setShowDeleteModal={setShowDeleteModal}
         handleDeleteReserva={handleDeleteReserva}
-        reservaAEliminar={reservaAEliminar}
       />
     </Container>
   );

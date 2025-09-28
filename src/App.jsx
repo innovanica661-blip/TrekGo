@@ -11,6 +11,7 @@ import Reservas from "./views/Reserva";
 import Calendario from "./views/Calendario";
 import Usuarios from "./views/Usuarios";
 import Registro from "./views/Registro";
+import CatalogoReservas from "./views/CatalogoReserva";
 
 import './App.css';
 
@@ -28,6 +29,7 @@ function App() {
             <Route path="/guias" element={<ProtectedRoute element={<Guias />} allowedRoles={['admin', 'user']} />} />
             <Route path="/reserva" element={<ProtectedRoute element={<Reservas />} allowedRoles={['admin']} />} />
             <Route path="/calendario" element={<ProtectedRoute element={<Calendario />} allowedRoles={['admin', 'user']} />} />
+            <Route path="/catalogoReserva" element={<ProtectedRoute element={<CatalogoReservas />} allowedRoles={['admin', 'user']} />} />
             <Route path="/tipos" element={<ProtectedRoute element={<Tipos />} allowedRoles={['admin']} />} />
             <Route path="/usuarios" element={<ProtectedRoute element={<Usuarios />} allowedRoles={['admin']} />} />
           </Routes>
