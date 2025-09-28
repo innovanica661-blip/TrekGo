@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../Imagenes/logo.png";
+import logo from "../Imagenes/logoo.jpg";
 import { useAuth } from "../database/authcontext";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Container, Nav, Navbar, Offcanvas, NavDropdown } from "react-bootstrap";
@@ -40,8 +40,8 @@ const Encabezado = () => {
     <Navbar expand="md" fixed="top" className="color-navbar">
       <Container>
         <Navbar.Brand onClick={() => handleNavigate("/inicio")} className="text-black" style={{ cursor: "pointer" }}>
-          <img alt="" src={logo} width="30" height="30" className="d-inline-block align-top" />{" "}
-          <strong>TrekGo</strong>
+          <img alt="" src={logo} width="50" height="40" className="d-inline-block align-top" />{" "}
+          
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="offcanvasNavbar-expand-sm" onClick={handleToggle} />
         <Navbar.Offcanvas

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Form, Col, Spinner } from "react-bootstrap";
+import { Container, Row, Form, Spinner } from "react-bootstrap";
 import { db } from "../database/firebaseconfig";
 import { collection, getDocs } from "firebase/firestore";
-import TarjetaReservas from "../components/calendario/TarjetaReservas"; // Adjusted to use your TarjetaReservas
+import TarjetaReservas from "../components/calendario/TarjetaReservas";
 import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
+
 
 const CatalogoReservas = () => {
   const [reservas, setReservas] = useState([]);
@@ -71,11 +72,10 @@ const CatalogoReservas = () => {
   }, [tipoSeleccionada, reservas]);
 
   return (
-    <Container className="mt-5">
-      <br />
-      <Row>
-        <Col lg={3} md={4} sm={12}>
-          <Form.Group className="mb-3">
+    <Container>
+      <div className="container_busca_cate">
+        <div className="tipo_ave">
+          <Form.Group className="tipo">
             <Form.Select
               value={tipoSeleccionada}
               onChange={(e) => setTipoSeleccionada(e.target.value)}
@@ -88,14 +88,14 @@ const CatalogoReservas = () => {
               ))}
             </Form.Select>
           </Form.Group>
-        </Col>
-        <Col lg={6} md={8} sm={12}>
+        </div>
+        <div className="busqueda">
           <CuadroBusquedas
             searchText={searchText}
             handleSearchChange={handleSearchChange}
           />
-        </Col>
-      </Row>
+        </div>
+      </div>
       <Row>
         {loading ? (
           <div className="text-center">

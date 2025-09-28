@@ -1,40 +1,74 @@
-import { Card, Col, Button, Modal, Row, Badge } from "react-bootstrap";
-import { Zoom } from "react-awesome-reveal";
 import { useState } from "react";
+import "../../App.css";
 
 const TarjetaReservas = ({ reserva }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleExpand = () => setIsExpanded(!isExpanded);
+
+  const imagenPredeterminada =
+    "https://via.placeholder.com/350x300?text=Imagen+No+Disponible";
+
+  // Definimos un límite de caracteres para mostrar el "Leer más"
+  const limiteDescripcion = 120;
+  const mostrarToggle =
+    reserva.descripcion && reserva.descripcion.length > limiteDescripcion;
+
   return (
-    <Col lg={4} md={4} sm={12} className="mb-4">
-      <Zoom cascade triggerOnce delay={10} duration={600}>
-        <Card style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ position: 'relative', flex: '0 0 300px', overflow: 'hidden' }}>
-            {reserva.imagen && (
-              <Card.Img
-                variant="top"
-                src={reserva.imagen}
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
+    <div className="tarjeta-reserva-container">
+      <div className="tarjeta-reserva">
+        <div className="imagen-reserva">
+          <img
+            src={reserva.imagen || imagenPredeterminada}
+            alt={reserva.nombreReserva || "Reserva"}
+            onError={(e) => (e.target.src = imagenPredeterminada)}
+          />
+        </div>
+
+        <div className="info-reserva">
+          <h3 className="titulo-reserva">
+            {reserva.nombreReserva || "No especificado"}
+          </h3>
+
+          <div className="info-lista-reserva">
+            <div className="info-item-reserva">
+              <div className="info-icon-reserva">📍</div>
+              <div className="info-content-reserva">
+                <span className="info-value-reserva">
+                 <strong>Ubicación: </strong> {reserva.ubicacion || "No disponible"}
+                </span>
+              </div>
+            </div>
+
+            <div className="info-item-reserva">
+              <div className="info-icon-reserva">📏</div>
+              <div className="info-content-reserva">
+                <span className="info-value-reserva">
+                 <strong>Distancia: </strong> {reserva.distancia || "No disponible"}
+                </span>
+              </div>
+            </div>
+
+            {/* Texto con leer más / ver menos */}
+            {reserva.descripcion && (
+              <div className="info-item-reserva">
+                <div className="info-icon-reserva">📝</div>
+                <div className="info-content-reserva">
+                  <p className={`info-texto ${isExpanded ? "expandido" : ""}`}>
+                  <strong>Descripción: </strong> {reserva.descripcion}
+                  </p>
+                  {mostrarToggle && (
+                    <span className="toggle-texto" onClick={toggleExpand}>
+                      {isExpanded ? "Ver menos" : "Leer más"}
+                    </span>
+                  )}
+                </div>
+              </div>
             )}
           </div>
-          <Card.Body style={{ flex: '1 0 auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', padding: '10px' }}>
-            <div style={{ flex: '1 0 auto' }}>
-              <Card.Title style={{ whiteSpace: 'normal', fontSize: '1.3em', marginBottom: '5px' }}>
-                {reserva.nombreReserva || 'No especificado'}
-              </Card.Title>
-              <Card.Text style={{ margin: '0', fontSize: '1.1em', marginBottom: '5px' }}>
-                <strong>Descripción:</strong> {reserva.descripcion || 'No especificado'}
-              </Card.Text>
-              <Card.Text style={{ margin: '0', fontSize: '1.1em', marginBottom: '5px' }}>
-                <strong>Ubicación:</strong> {reserva.ubicacion || 'No especificado'}
-              </Card.Text>
-              <Card.Text style={{ margin: '0', fontSize: '1.1em' }}>
-                <strong>Distancia:</strong> {reserva.distancia || 'No disponible'}
-              </Card.Text>
-            </div>
-          </Card.Body>
-        </Card>
-      </Zoom>
-    </Col>
+        </div>
+      </div>
+    </div>
   );
 };
 

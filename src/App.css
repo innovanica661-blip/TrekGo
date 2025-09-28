@@ -16,3 +16,687 @@
   color: #000 !important;
   font-weight: bold;
 }
+
+/* Contenedor principal de la tarjeta */
+.tarjeta-ave-container {
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto 20px;
+  padding: 0 10px;
+}
+
+/* Tarjeta principal */
+.tarjeta-ave {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+  width: 350px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.tarjeta-ave:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+/* Imagen de fondo que cubre toda la tarjeta */
+.tarjeta-ave::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: var(--imagen-fondo);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 20px;
+  height: 340px;
+  transition: transform 0.3s ease;
+}
+
+.tarjeta-ave:hover::before {
+  transform: scale(1.05);
+}
+
+/* Sección de imagen (40% superior) */
+.imagen-section {
+  flex: 0 0 40%;
+  position: relative;
+  overflow: visible;
+  height: 200px;
+}
+
+/* Sección de información (60% inferior con fondo verde curvo) */
+.informacion-section {
+  flex: 1;
+  background: rgb(206, 242, 207);
+  position: relative;
+  padding: 15px 20px 20px 20px;
+  display: flex;  
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  border-top-left-radius: 150px;
+  transition: all 0.3s ease;
+  margin-top: -33px;
+}
+
+.tarjeta-ave:hover .informacion-section {
+
+  transform: translateY(-2px);
+}
+
+/* Título del ave */
+.titulo-ave {
+  font-size: 15PX;
+  font-weight: bold;
+  color: #101110;
+  margin: 0 0 17px 0;
+  margin-left: 35px;
+  text-align: center;
+  position: relative;
+}
+
+/* Lista de información */
+.info-lista {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  margin: 0 40px;
+  margin-top: -11px;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-height: 32px;
+}
+
+.info-icon {
+  font-size: 1em;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.info-label {
+  font-size: 0.8em;
+  color: #2E7D32;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.info-value {
+  font-size: 0.85em;
+  color: #090a09;
+  font-weight: 500;
+  line-height: 1.2;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Sección de botones */
+.botones-section {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  position: relative;
+  height: 30px;
+  width: 70%;
+  margin-left: 16%;
+}
+
+.btn-ver-detalle,
+.btn-reservar {
+  background: white;
+  border: 2px solid #4CAF50;
+  color: #2E7D32;
+  padding: 10px 16px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 40px;
+}
+
+.btn-ver-detalle:hover,
+.btn-reservar:hover {
+  background: #4CAF50;
+  color: white;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
+}
+
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 15px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #2E7D32;
+  font-size: 1.5em;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 2em;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.modal-close:hover {
+  background-color: #f5f5f5;
+}
+
+.modal-body {
+  padding: 20px;
+  display: flex;
+  gap: 20px;
+}
+
+.modal-image {
+  flex: 0 0 200px;
+}
+
+.modal-img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.modal-info {
+  flex: 1;
+}
+
+.modal-info p {
+  margin: 0 0 10px 0;
+  color: #333;
+  line-height: 1.5;
+}
+
+.modal-info strong {
+  color: #2E7D32;
+}
+
+.modal-footer {
+  padding: 20px;
+  border-top: 1px solid #e0e0e0;
+  text-align: right;
+}
+
+.btn-cerrar {
+  background: #666;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+}
+
+.btn-cerrar:hover {
+  background: #555;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .tarjeta-ave-container {
+    max-width: 100%;
+    padding: 0 5px;
+  }
+  
+  .tarjeta-ave {
+    height: 450px;
+    width: 100%;
+    max-width: 350px;
+  }
+  
+  .informacion-section {
+    padding: 12px 15px 15px 15px;
+  }
+  
+  .titulo-ave {
+    font-size: 1.1em;
+  }
+  
+  .info-lista {
+    gap: 5px;
+    margin: 0 5px;
+  }
+  
+  .info-item {
+    gap: 6px;
+    min-height: 28px;
+  }
+  
+  .info-icon {
+    font-size: 0.9em;
+    width: 18px;
+  }
+  
+  .info-label {
+    font-size: 0.75em;
+  }
+  
+  .info-value {
+    font-size: 0.8em;
+  }
+  
+  .btn-ver-detalle,
+  .btn-reservar {
+    padding: 8px 12px;
+    font-size: 0.85em;
+    min-height: 36px;
+  }
+  
+  .modal-body {
+    flex-direction: column;
+  }
+  
+  .modal-image {
+    flex: none;
+    text-align: center;
+  }
+  
+  .modal-img {
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tarjeta-ave {
+    height: 400px;
+    width: 100%;
+    max-width: 320px;
+  }
+  
+  .informacion-section {
+    padding: 10px 12px 12px 12px;
+  }
+  
+  .titulo-ave {
+    font-size: 1em;
+    margin-bottom: 8px;
+  }
+  
+  .info-lista {
+    gap: 4px;
+    margin: 0 3px;
+  }
+  
+  .info-item {
+    gap: 5px;
+    min-height: 26px;
+  }
+  
+  .info-icon {
+    font-size: 0.85em;
+    width: 16px;
+  }
+  
+  .info-label {
+    font-size: 0.7em;
+  }
+  
+  .info-value {
+    font-size: 0.75em;
+  }
+  
+  .btn-ver-detalle,
+  .btn-reservar {
+    padding: 7px 10px;
+    font-size: 0.8em;
+    min-height: 32px;
+  }
+}
+
+/* Mejoras para el grid responsive */
+@media (min-width: 1200px) {
+  .catalogo-container {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 1199px) and (min-width: 992px) {
+  .catalogo-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 991px) and (min-width: 768px) {
+  .catalogo-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .catalogo-container {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+}
+
+.container_busca_cate{
+  display: flex;
+margin: 20px;
+  justify-content: center;
+  gap: 20px;
+  background-color: rgb(186, 224, 188);
+  padding: 15px;
+  height: 65px;
+  border-radius: 10px;
+}
+
+.tipo_ave{
+  width: 200px;
+}
+.busqueda{
+  width: 500px;
+}
+
+
+
+/* ============================
+   TARJETAS DE RESERVAS
+   ============================ */
+
+/* Contenedor principal de la tarjeta de reservas */
+.tarjeta-reserva-container {
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto 20px;
+  padding: 0 10px;
+}
+
+/* Tarjeta principal */
+.tarjeta-reserva {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+  width: 350px;
+  height: 500px;  /* 🔹 fija la altura */
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+
+.tarjeta-reserva:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+/* Sección de imagen */
+.imagen-reserva {
+  flex-shrink: 0;              /* evita que se encoja */
+  width: 100%;
+  height: 45%;                 /* la imagen ocupa el 45% de la tarjeta */
+  max-height: 250px;           /* límite para que no se desborde */
+  position: relative;
+  overflow: hidden;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.imagen-reserva img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;            /* recorta sin deformar */
+  object-position: center;      /* centra bien la imagen */
+  display: block;
+  transition: transform 0.4s ease, filter 0.3s ease;
+}
+
+
+/* Efecto hover en la imagen */
+.tarjeta-reserva:hover .imagen-reserva img {
+  transform: scale(1.05);
+  filter: brightness(1.05) contrast(1.05);
+}
+
+/* Overlay degradado entre la imagen y la información */
+.imagen-reserva::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: linear-gradient(to top, rgb(206, 242, 207), rgba(206, 242, 207, 0));
+  pointer-events: none;
+}
+
+
+/* Sección de información */
+.info-reserva {
+  flex: 1;
+  background: rgb(206, 242, 207);
+  position: relative;
+  padding: 15px 20px 20px 20px;
+  display: flex;  
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  margin-top: -33px;
+}
+
+.tarjeta-reserva:hover .info-reserva {
+  transform: translateY(-2px);
+}
+
+/* Título de la reserva */
+.titulo-reserva {
+  font-size: 15px;
+  font-weight: bold;
+  color: #0a0a0a;
+  margin: 0 0 17px 0;
+  text-align: center;
+}
+
+/* Lista de información */
+.info-lista-reserva {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 20px;
+}
+
+.info-item-reserva {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-height: 32px;
+}
+
+.info-icon-reserva {
+  font-size: 1em;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.info-content-reserva {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.info-value-reserva {
+  font-size: 0.85em;
+  color: #080808;
+  font-weight: 500;
+  line-height: 1.2;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Botón Leer más / Leer menos */
+.read-more-btn {
+  background: white;
+  border: 2px solid #4CAF50;
+  color: #2E7D32;
+  padding: 10px 16px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.read-more-btn:hover {
+  background: #4CAF50;
+  color: white;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
+}
+
+/* ============================
+   RESPONSIVE RESERVAS
+   ============================ */
+
+@media (max-width: 768px) {
+  .tarjeta-reserva {
+    height: 450px;
+    width: 100%;
+    max-width: 350px;
+  }
+
+  .info-reserva {
+    padding: 12px 15px 15px 15px;
+  }
+
+  .titulo-reserva {
+    font-size: 1.1em;
+  }
+
+  .info-lista-reserva {
+    margin: 0 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tarjeta-reserva {
+    height: 400px;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .info-reserva {
+    padding: 10px 12px 12px 12px;
+  }
+
+  .titulo-reserva {
+    font-size: 1em;
+  }
+
+  .info-lista-reserva {
+    margin: 0 5px;
+  }
+}
+
+
+
+
+
+
+.info-texto {
+  font-size: 0.7em;
+  color: #020202;
+  line-height: 1.4;
+  max-height: 80px;
+  overflow: hidden;
+  position: relative;
+  transition: max-height 0.4s ease;
+  text-overflow: ellipsis;  /* 🔹 agrega los "..." */
+}
+
+
+.info-texto.expandido {
+  max-height: 500px;     /* 🔹 Altura grande cuando está expandido */
+}
+
+.toggle-texto {
+  color: #070807;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 5;
+  font-size: 0.6em;
+}
