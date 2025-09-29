@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Button, Carousel, Row, Col } from "react-bootstrap"; // Añadí Row y Col
-import ModalInstalacionIOS from "../components/inicio/ModalInstalacionIOS";
+import React, { useState, useEffect } from "react"; // 👈 AGREGA ESTO
+import { Container, Button, Carousel, Row, Col, Card } from "react-bootstrap";
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom'; // Para redirección
 import Aves1 from '../Imagenes/Aves1.jpg';
@@ -10,17 +9,8 @@ import Aves4 from '../Imagenes/Aves4.jpg';
 
 const Inicio = () => {
   const [solicitudInstalacion, setSolicitudInstalacion] = useState(null);
-  const [mostrarBotonInstalacion, setMostrarBotonInstalacion] = useState(false);
-  const [esDispositivoIOS, setEsDispositivoIOS] = useState(false);
-  const [mostrarModalInstrucciones, setMostrarModalInstrucciones] = useState(false);
   const { t, i18n } = useTranslation();
   const navigate = useNavigate(); // Hook para navegar
-
-  // Detectar dispositivo iOS
-  useEffect(() => {
-    const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    setEsDispositivoIOS(esIOS);
-  }, []);
 
   // Manejar evento beforeinstallprompt
   useEffect(() => {
@@ -57,16 +47,21 @@ const Inicio = () => {
     navigate('/registro'); // Redirige a la página de registro
   };
 
+  // Nuevas funciones para redirecciones
+  const redirigirAGuias = () => navigate('/guias');
+  const redirigirAAves = () => navigate('/aves');
+  const redirigirACatalogo = () => navigate('/catalogo');
+
   return (
     <>
       <div style={{ position: 'relative', minHeight: '80vh', objectFit: 'cover' }}>
-        <Carousel fade interval={5000} style={{ height: '100vh' }}>
+        <Carousel fade interval={1000} style={{ height: '100vh' }}>
           <Carousel.Item>
             <img
               className="d-block w-100"
               src={Aves1}
               alt="Aves 1"
-              style={{ objectFit: 'cover', width: '100%', height: '75vh' }}
+              style={{ objectFit: 'cover', width: '100%', height: '85vh' }}
             />
             <div
               style={{
@@ -79,8 +74,8 @@ const Inicio = () => {
                 zIndex: 1,
               }}
             >
-              <h1>LA MEJOR PLATAFORMA DE TURISMO EN CHONTALES</h1>
-              <p>Contamos con tours por los destinos para destinos más emblemáticos como las coordilleras de Amerrisque entre muchos más.</p>
+              <h1>¡Bienvenido a TrekGo!</h1>
+              <p>Explora los mejores tours de avistamiento de aves en Chontales. ¿Quieres saber más? Da un recorrido rápido.</p>
             </div>
             <div
               style={{
@@ -92,7 +87,7 @@ const Inicio = () => {
               }}
             >
               <Button variant="success" size="lg" onClick={redirigirARegistro}>
-                ¡Únete a nuestra comunidad de birders!
+                ¡Regístrate ahora!
               </Button>
             </div>
           </Carousel.Item>
@@ -114,8 +109,8 @@ const Inicio = () => {
                 zIndex: 1,
               }}
             >
-              <h1>LA MEJOR PLATAFORMA DE TURISMO EN CHONTALES</h1>
-              <p>Contamos con tours por los destinos para destinos más emblemáticos como las coordilleras de Amerrisque entre muchos más.</p>
+              <h1>¡Bienvenido a TrekGo!</h1>
+              <p>Explora los mejores tours de avistamiento de aves en Chontales. ¿Quieres saber más? Da un recorrido rápido.</p>
             </div>
             <div
               style={{
@@ -127,7 +122,7 @@ const Inicio = () => {
               }}
             >
               <Button variant="success" size="lg" onClick={redirigirARegistro}>
-                ¡Únete a nuestra comunidad de birders!
+                ¡Regístrate ahora!
               </Button>
             </div>
           </Carousel.Item>
@@ -149,8 +144,8 @@ const Inicio = () => {
                 zIndex: 1,
               }}
             >
-              <h1>LA MEJOR PLATAFORMA DE TURISMO EN CHONTALES</h1>
-              <p>Contamos con tours por los destinos para destinos más emblemáticos como las coordilleras de Amerrisque entre muchos más.</p>
+              <h1>¡Bienvenido a TrekGo!</h1>
+              <p>Explora los mejores tours de avistamiento de aves en Chontales. ¿Quieres saber más? Da un recorrido rápido.</p>
             </div>
             <div
               style={{
@@ -162,7 +157,7 @@ const Inicio = () => {
               }}
             >
               <Button variant="success" size="lg" onClick={redirigirARegistro}>
-                ¡Únete a nuestra comunidad de birders!
+                ¡Regístrate ahora!
               </Button>
             </div>
           </Carousel.Item>
@@ -184,8 +179,8 @@ const Inicio = () => {
                 zIndex: 1,
               }}
             >
-              <h1>LA MEJOR PLATAFORMA DE TURISMO EN CHONTALES</h1>
-              <p>Descubre los mejores destinos para avistamiento de aves en Chontales. Ofrecemos guías expertos, reservas fáciles y un catálogo único de especies.</p>
+              <h1>¡Bienvenido a TrekGo!</h1>
+              <p>Explora los mejores tours de avistamiento de aves en Chontales. ¿Quieres saber más? Da un recorrido rápido.</p>
             </div>
             <div
               style={{
@@ -197,41 +192,93 @@ const Inicio = () => {
               }}
             >
               <Button variant="success" size="lg" onClick={redirigirARegistro}>
-                ¡Únete a nuestra comunidad de birders!
+                ¡Regístrate ahora!
               </Button>
             </div>
           </Carousel.Item>
         </Carousel>
       </div>
-      {/* Nueva sección para Objetivos, Misión y Visión con íconos y texto */}
-      <Container className="mt-1 py-1">
-        <Row className="justify-content-center">
-          <Col md={4} className="mb-4 text-center">
-            <i className="bi-bullseye" style={{ fontSize: '2rem', color: '#a72828ff' }}></i>
-            <h3 className="mt-2">{t('Objetivos')}</h3>
-            <p>•	Posicionamiento de la marca: lograr que TrekGo sea reconocido como plataforma especializada en aventurismo y reservas naturales en Nicaragua y una de las más innovadoras.
-              •	Atracción de turistas: implementar estrategias digitales que destaquen la riqueza de aves y reservas del país, incrementando el interés y las visitas de viajeros.
-            •	 Promoción del turismo: difundir la conservación ambiental y el aviturismo responsable como valores diferenciales de la plataforma.
-</p>
+      {/* Sección de tarjetas informativas */}
+      <Container className="py-5">
+        <Row className="justify-content-center g-4">
+          <Col md={4}>
+            <Card
+              className="h-100 text-center animate__animated animate__fadeInUp"
+              style={{ border: 'none', boxShadow: '0 10px 20px rgba(0, 0, 0, 0.2), 0 6px 6px rgba(0, 0, 0, 0.1)', transition: 'transform 0.3s' }}
+              onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+            >
+              <Card.Img variant="top" src={Aves1} alt="Guías" style={{ height: '200px', objectFit: 'cover' }} />
+              <Card.Body>
+                <Card.Title>Explora nuestros guías</Card.Title>
+                <Card.Text>Conoce a nuestros expertos guías para tus tours de avistamiento.</Card.Text>
+                <Button variant="success" onClick={redirigirAGuias}>Ver Guías</Button>
+              </Card.Body>
+            </Card>
           </Col>
-          <Col md={4} className="mb-4 text-center">
-            <i className="bi-flag" style={{ fontSize: '2rem', color: '#3538dcff' }}></i>
-            <h3 className="mt-2">{t('Misión')}</h3>
-            <p>La principal misión de TrekGo es impulsar el turismo sostenible en nicaragua mediante una plataforma digital innovadora 
-              que conecte a turistas, guías y operadoras locales, ofreciendo experiencias únicas en el aviturismo y las visitas a reservas 
-              naturales, buscando fortalecer la conservación de la biodiversidad, generar oportunidades económicas para comunidades y posicionar a 
-              nicaragua como un destino líder en ecoturismo responsable y de calidad.</p>
+          <Col md={4}>
+            <Card
+              className="h-100 text-center animate__animated animate__fadeInUp"
+              style={{ border: 'none', boxShadow: '0 10px 20px rgba(0, 0, 0, 0.2), 0 6px 6px rgba(0, 0, 0, 0.1)', transition: 'transform 0.3s' }}
+              onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+            >
+              <Card.Img variant="top" src={Aves2} alt="Aves" style={{ height: '200px', objectFit: 'cover' }} />
+              <Card.Body>
+                <Card.Title>Explora nuestras aves</Card.Title>
+                <Card.Text>Descubre la diversidad de aves en Chontales.</Card.Text>
+                <Button variant="success" onClick={redirigirAAves}>Ver Aves</Button>
+              </Card.Body>
+            </Card>
           </Col>
-          <Col md={4} className="mb-4 text-center">
-            <i className="bi-eye" style={{ fontSize: '2rem', color: '#128049ff' }}></i>
-            <h3 className="mt-2">{t('Visión')}</h3>
-            <p>Como equipo aspiramos a que TrekGo se convierta en la principal plataforma digital de aviturismo en Nicaragua. Visualizamos una aplicación 
-              que, al cumplir con todas sus funcionalidades, logre transformar la manera en que turistas nacionales e internacionales exploren la riqueza
-              natural del país, potenciando experiencias únicas, seguras y educativas.</p>
+          <Col md={4}>
+            <Card
+              className="h-100 text-center animate__animated animate__fadeInUp"
+              style={{ border: 'none', boxShadow: '0 10px 20px rgba(0, 0, 0, 0.2), 0 6px 6px rgba(0, 0, 0, 0.1)', transition: 'transform 0.3s' }}
+              onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+            >
+              <Card.Img variant="top" src={Aves3} alt="Catálogo" style={{ height: '200px', objectFit: 'cover' }} />
+              <Card.Body>
+                <Card.Title>Descubre nuestro calendario de actividades</Card.Title>
+                <Card.Text>Revisa nuestro catálogo de tours y reservas.</Card.Text>
+                <Button variant="success" onClick={redirigirACatalogo}>Ver Catálogo</Button>
+              </Card.Body>
+            </Card>
           </Col>
         </Row>
       </Container>
-    </>
+      <footer className="bg-dark text-white text-center py-4">
+        <Container>
+          <Row>
+            <Col md={6} className="text-start mb-3 mb-md-0">
+              <h5>Sobre Nosotros</h5>
+              <p>Somos TrekGo - Apasionados por el turismo y la conservación de aves en Chontales.</p>
+              <p>Contacto: trekgoinfo@gmail.com</p>
+              <p>Teléfono: 89562310</p>
+            </Col>
+            <Col md={6} className="text-start">
+              <h5>Síguenos en nuestras redes sociales</h5>
+              <p>
+                <a href="https://www.facebook.com/tu-pagina" target="_blank" rel="noopener noreferrer" className="text-white d-flex align-items-center mb-2">
+                  <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                  <path fill-rule="evenodd" d="M13.135 6H15V3h-1.865a4.147 4.147 0 0 0-4.142 4.142V9H7v3h2v9.938h3V12h2.021l.592-3H12V6.591A.6.6 0 0 1 12.592 6h.543Z" clip-rule="evenodd"/>
+                  </svg>
+                </a>
+                <a href="https://www.instagram.com/tu-cuenta" target="_blank" rel="noopener noreferrer" className="text-white d-flex align-items-center">
+                  <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                  <path fill="currentColor" fill-rule="evenodd" d="M3 8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8Zm5-3a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H8Zm7.597 2.214a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2h-.01a1 1 0 0 1-1-1ZM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm-5 3a5 5 0 1 1 10 0 5 5 0 0 1-10 0Z" clip-rule="evenodd"/>
+                  </svg>
+                </a>
+              </p>
+            </Col>
+          </Row>
+          <div className="mt-3 text-center">
+            <p>&copy; {new Date().getFullYear()} Plataforma de Turismo en Chontales. Todos los derechos reservados.</p>
+          </div>
+        </Container>
+      </footer>
+    </> 
   );
 };
 

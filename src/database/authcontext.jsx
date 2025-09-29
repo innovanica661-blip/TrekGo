@@ -1,3 +1,4 @@
+// src/database/authcontext.jsx
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { appfirebase } from "./firebaseconfig";
@@ -8,59 +9,48 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null); // Firebase Auth user
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState(null);
   const db = getFirestore(appfirebase);
 
   useEffect(() => {
     const auth = getAuth(appfirebase);
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
-      setIsLoggedIn(!!user);
-      if (user) {
-        // Verificar si el usuario existe en la colección "usuarios"
-        const userDocRef = doc(db, "usuarios", user.uid);
-        const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
-          // Si el usuario está registrado en "usuarios", su rol es 'user'
-          setRole('user');
-        } else {
-          // Si no está registrado, asumimos que es 'admin' (autenticado via Login)
-          setRole('admin');
+    const unsubscribe = onAuthStateChanged(auth, async (u) => {
+      setUser(u);
+      setIsLoggedIn(!!u);
+
+      if (u) {
+        try {
+          const userDocRef = doc(db, "usuarios", u.uid);
+          const userDoc = await getDoc(userDocRef);
+
+          if (userDoc.exists()) {
+            const data = userDoc.data() || {};
+            // Si el documento define role, lo usamos; si no, por defecto 'user'
+            setRole(data.role ? data.role : "user");
+          } else {
+            // Si no existe doc en 'usuarios', asumimos admin (según tu requerimiento)
+            setRole("admin");
+          }
+        } catch (err) {
+          console.error("Error leyendo rol en Firestore:", err);
+          setRole(null);
         }
       } else {
         setRole(null);
       }
     });
+
     return () => unsubscribe();
   }, [db]);
-
-  // Detectar estado de conexión
-  useEffect(() => {
-    const handleOnline = () => {
-      console.log("¡Conexión restablecida!");
-      alert("¡Conexión restablecida!");
-    };
-    const handleOffline = () => {
-      console.log("Estás offline. Los cambios se sincronizarán cuando vuelvas a conectarte.");
-      alert("Estás offline. Los cambios se sincronizarán cuando vuelvas a conectarte.");
-    };
-
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
-
-    return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
-    };
-  }, []);
 
   const logout = async () => {
     const auth = getAuth(appfirebase);
     await signOut(auth);
     setIsLoggedIn(false);
     setRole(null);
+    setUser(null);
   };
 
   return (

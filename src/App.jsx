@@ -1,6 +1,8 @@
+// src/App.jsx
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./database/authcontext";
-import ProtectedRoute from "./components/ProtectedRoute"; 
+import ProtectedRoute from "./components/ProtectedRoute";
 import Login from './views/Login';
 import Encabezado from "./components/Encabezado";
 import Inicio from "./views/Inicio";
@@ -21,15 +23,24 @@ function App() {
         <Encabezado />
         <main className="margen-superior-main">
           <Routes>
-            <Route path="/" element={<Login />} />
+            {/* Publicas */}
+            <Route path="/" element={<Inicio />} />
+            <Route path="/inicio" element={<Inicio />} />
+            <Route path="/guias" element={<Guias />} />
+            <Route path="/reserva" element={<Reservas />} />
+            <Route path="/aves" element={<Aves />} />
+
+            {/* Login & Registro */}
+            <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
-            <Route path="/inicio" element={<ProtectedRoute element={<Inicio />} allowedRoles={['admin', 'user']} />} />
-            <Route path="/aves" element={<Aves />} allowedRoles={['admin', 'user']}  />
-            <Route path="/guias" element={<Guias />} allowedRoles={['admin', 'user']}  />
-            <Route path="/reserva" element={<Reservas />} allowedRoles={['admin']}  />
-            <Route path="/catalogo" element={<Catalogo />} allowedRoles={['admin', 'user']}  />
-            <Route path="/tipos" element={<Tipos />} allowedRoles={['admin']}  />
-            <Route path="/usuarios" element={<Usuarios />} allowedRoles={['admin']}  />
+
+            {/* Protegidas por rol */}
+            <Route path="/catalogo" element={<ProtectedRoute element={<Catalogo />} allowedRoles={['admin','user']} />} />
+            <Route path="/tipos" element={<ProtectedRoute element={<Tipos />} allowedRoles={['admin']} />} />
+            <Route path="/usuarios" element={<ProtectedRoute element={<Usuarios />} allowedRoles={['admin']} />} />
+
+            {/* Inicio admin/user protegido (opcional) */}
+            <Route path="/inicio-protected" element={<ProtectedRoute element={<Inicio />} allowedRoles={['admin','user']} />} />
           </Routes>
         </main>
       </Router>

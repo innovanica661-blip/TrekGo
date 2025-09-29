@@ -16,3 +16,240 @@
   color: #000 !important;
   font-weight: bold;
 }
+
+/* Contenedor principal del registro */
+.registro-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f5f6fa; /* igual que login */
+  gap: 5px;
+}
+
+/* Caja principal que contiene form + imagen */
+.registro-card {
+  display: flex;
+  align-items: center;
+}
+
+/* Formulario del registro */
+.registro-form {
+  position: relative;
+  background: white;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 380px; /* 🔹 mismo ancho que login */
+  height: 430px;    /* 🔹 más alto que login (antes 375px) */
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Logo circular flotando arriba */
+.logo-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 50%;
+  padding: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.logo {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+}
+
+/* Título */
+.registro-titulo {
+  margin-top: 40px;
+  margin-bottom: 12px;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+/* Inputs */
+.input-registro {
+  width: 100%;
+  padding: 7px;
+  margin-bottom: 7px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 0.82rem;
+  transition: all 0.2s ease;
+}
+
+.input-registro:focus {
+  border-color: #0047ff;
+  box-shadow: 0 0 4px rgba(0, 71, 255, 0.4);
+}
+
+/* Botón */
+.btn-registrarse {
+  width: 100%;
+  padding: 7px;
+  background: #0047ff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 7px;
+  transition: all 0.3s ease;
+  font-size: 0.82rem;
+}
+
+.btn-registrarse:hover {
+  background: #0036cc;
+  transform: translateY(-2px);
+  box-shadow: 0px 4px 10px rgba(0, 71, 255, 0.4);
+}
+
+/* Texto error */
+.error-text {
+  color: red;
+  margin-bottom: 5px;
+  font-size: 0.74rem;
+}
+
+/* Link */
+.texto-login {
+  margin-top: 8px;
+  font-size: 0.8rem;
+}
+
+/* Imagen */
+.registro-imagen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.imagen-ave {
+  width: 400px;   /* 🔹 mismo ancho que login */
+  height: 430px;  /* 🔹 más alto que login (antes 375px) */
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+  margin-left: -4px; /* 🔹 para que quede casi pegado */
+}
+
+/* Texto dentro de la imagen (opcional, si no lo usas se puede borrar) */
+.texto-imagen {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+
+
+
+
+/* Contenedor principal de login */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f5f6fa;
+  gap: 5px; /* más pegado, antes estaba en 20px */
+}
+
+/* Lado izquierdo con la imagen */
+.login-left {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-image {
+  width: 400px; /* mismo ancho que el form */
+  height: 375px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+  margin-right: -4px; /* truco para que quede casi pegado al form */
+}
+
+/* Lado derecho con el formulario */
+.login-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Caja del formulario */
+.login-box {
+  position: relative;
+  background: white;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 380px; /* igual al ancho de la imagen */
+  text-align: center;
+}
+
+/* Logo circular flotando arriba */
+.login-logo {
+  width: 70px;
+  height: 70px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.logo {
+  max-width: 40px;
+  max-height: 40px;
+}
+
+/* Botón */
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+  font-weight: bold;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Link de registro */
+.register-link {
+  color: #007bff;
+  font-weight: bold;
+  text-decoration: none;
+}
+.register-link2 {
+  color: #007bff;
+  font-weight: bold;
+  text-decoration: none;
+}
+.register-link2:hover {
+  text-decoration: underline;
+}
+.register-link:hover {
+  text-decoration: underline;
+}
