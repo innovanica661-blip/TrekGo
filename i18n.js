@@ -35,11 +35,13 @@ i18n
         translation: {
           menu: {
             inicio: "Inicio",
+            gestione: "Gestiones",
             tipo: "Tipo",
-            aves: "Aves",
-            guia: "Guias",
+            aves: "Gestión de Aves",
+            guia: "Gestión de Guias",
             reserva: "Gestión de reservas",
             catalogoReserva: "Reservas naturales",
+            catalogoAves: "Aves",
             calendario: "Calendario",
             cerrarSesion: "Cerrar Sesión",
             iniciarSesion: "Iniciar Sesión",

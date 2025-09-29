@@ -35,7 +35,7 @@ const TarjetaReservas = ({ reserva }) => {
               <div className="info-icon-reserva">📍</div>
               <div className="info-content-reserva">
                 <span className="info-value-reserva">
-                 <strong>Ubicación: </strong> {reserva.ubicacion || "No disponible"}
+                  <strong>Ubicación: </strong> {reserva.ubicacion || "No disponible"}
                 </span>
               </div>
             </div>
@@ -44,7 +44,7 @@ const TarjetaReservas = ({ reserva }) => {
               <div className="info-icon-reserva">📏</div>
               <div className="info-content-reserva">
                 <span className="info-value-reserva">
-                 <strong>Distancia: </strong> {reserva.distancia || "No disponible"}
+                  <strong>Distancia: </strong> {reserva.distancia || "No disponible"}
                 </span>
               </div>
             </div>

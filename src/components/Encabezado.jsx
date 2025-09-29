@@ -41,7 +41,6 @@ const Encabezado = () => {
       <Container>
         <Navbar.Brand onClick={() => handleNavigate("/inicio")} className="text-black" style={{ cursor: "pointer" }}>
           <img alt="" src={logo} width="50" height="40" className="d-inline-block align-top" />{" "}
-          
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="offcanvasNavbar-expand-sm" onClick={handleToggle} />
         <Navbar.Offcanvas
@@ -62,30 +61,45 @@ const Encabezado = () => {
                 {isCollapsed ? <i className="bi-house-door-fill me-2"></i> : null}
                 <strong>{t('menu.inicio')}</strong>
               </Nav.Link>
+
               {role === 'admin' && (
-                <>
-                  <Nav.Link onClick={() => handleNavigate("/tipos")} className={isCollapsed ? "color-texto-marca" : "text-black"}>
+                <NavDropdown
+                  title={
+                    <span>
+                      {isCollapsed ? <i className="bi-box-seam me-2"></i> : null}
+                      <strong>{t('menu.gestione')}</strong>
+                    </span>
+                  }
+                  id="nav-productos-dropdown"
+                  className={isCollapsed ? "color-texto-marca" : "text-black"}
+                >
+                  <NavDropdown.Item onClick={() => handleNavigate("/tipos")}>
                     {isCollapsed ? <i className="bi-bookmark-check-fill me-2"></i> : null}
                     <strong>{t('menu.tipo')}</strong>
-                  </Nav.Link>
-                  <Nav.Link onClick={() => handleNavigate("/usuarios")} className={isCollapsed ? "color-texto-marca" : "text-black"}>
+                  </NavDropdown.Item>
+
+                  <NavDropdown.Item onClick={() => handleNavigate("/usuarios")}>
                     {isCollapsed ? <i className="bi-bookmark-check-fill me-2"></i> : null}
                     <strong>{t('Usuarios')}</strong>
-                  </Nav.Link>
-                </>
+                  </NavDropdown.Item>
+
+                  <NavDropdown.Item onClick={() => handleNavigate("/guias")}>
+                    {isCollapsed ? <i className="bi-bookmark-check-fill me-2"></i> : null}
+                    <strong>{t('menu.guia')}</strong>
+                  </NavDropdown.Item>
+
+                  <NavDropdown.Item onClick={() => handleNavigate("/reserva")}>
+                    {isCollapsed ? <i className="bi-bookmark-check-fill me-2"></i> : null}
+                    <strong>{t('menu.reserva')}</strong>
+                  </NavDropdown.Item>
+
+                  <NavDropdown.Item onClick={() => handleNavigate("/aves")}>
+                    {isCollapsed ? <i className="bi-bag-heart-fill me-2"></i> : null}
+                    <strong>{t('menu.aves')}</strong>
+                  </NavDropdown.Item>
+                </NavDropdown>
               )}
-              <Nav.Link onClick={() => handleNavigate("/guias")} className={isCollapsed ? "color-texto-marca" : "text-black"}>
-                {isCollapsed ? <i className="bi-bookmark-check-fill me-2"></i> : null}
-                <strong>{t('menu.guia')}</strong>
-              </Nav.Link>
-              <Nav.Link onClick={() => handleNavigate("/reserva")} className={isCollapsed ? "color-texto-marca" : "text-black"}>
-                {isCollapsed ? <i className="bi-bookmark-check-fill me-2"></i> : null}
-                <strong>{t('menu.reserva')}</strong>
-              </Nav.Link>
-              <Nav.Link onClick={() => handleNavigate("/aves")} className={isCollapsed ? "color-texto-marca" : "text-black"}>
-                {isCollapsed ? <i className="bi-bag-heart-fill me-2"></i> : null}
-                <strong>{t('menu.aves')}</strong>
-              </Nav.Link>
+
               <Nav.Link onClick={() => handleNavigate("/calendario")} className={isCollapsed ? "color-texto-marca" : "text-black"}>
                 {isCollapsed ? <i className="bi-file-earmark-richtext-fill me-2"></i> : null}
                 <strong>{t('menu.calendario')}</strong>
@@ -95,14 +109,20 @@ const Encabezado = () => {
                 {isCollapsed ? <i className="bi-file-earmark-richtext-fill me-2"></i> : null}
                 <strong>{t('menu.catalogoReserva')}</strong>
               </Nav.Link>
-              <NavDropdown 
+
+              <Nav.Link onClick={() => handleNavigate("/catalogoAves")} className={isCollapsed ? "color-texto-marca" : "text-black"}>
+                {isCollapsed ? <i className="bi-file-earmark-richtext-fill me-2"></i> : null}
+                <strong>{t('menu.catalogoAves')}</strong>
+              </Nav.Link>
+
+              <NavDropdown
                 title={
                   <span>
                     <i className="bi-translate me-2"></i>
                     {isCollapsed && <span>{t('menu.idioma')}</span>}
                   </span>
                 }
-                id="basic-nav-dropdown"  
+                id="basic-nav-dropdown"
                 className={isCollapsed ? "color-texto-marca" : "texto-blanco"}
               >
                 <NavDropdown.Item onClick={() => cambiarIdioma('es')} className="text-black">
@@ -112,6 +132,7 @@ const Encabezado = () => {
                   <strong>{t('menu.ingles')}</strong>
                 </NavDropdown.Item>
               </NavDropdown>
+
               {isLoggedIn ? (
                 <Nav.Link onClick={handleLogout} className={isCollapsed ? "text-black" : "text-black"}>
                   {isCollapsed ? <i className="bi-box-arrow-in-right me-2"></i> : null}
